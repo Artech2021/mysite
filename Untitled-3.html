@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Notebook-style Question Generator</title>
+<style>
+body {
+  margin: 0;
+  font-family: system-ui;
+  background: #fff;
+  color: #111;
+}
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+}
+textarea {
+  border: none;
+  padding: 20px;
+  font-size: 14px;
+  outline: none;
+  resize: none;
+}
+.panel {
+  border-left: 1px solid #eee;
+  padding: 20px;
+  overflow-y: auto;
+}
+button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.question {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+.source {
+  font-size: 12px;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+  <textarea id="text" placeholder="粘贴文章内容…"></textarea>
+
+  <div class="panel">
+    <button onclick="generate()">生成题库</button>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script>
+async function generate() {
+  const text = document.getElementById("text").value;
+  const res = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text })
+  });
+  const data = await res.json();
+
+  let html = "<h3>选择题</h3>";
+  data.choice.forEach(q => {
+    html += `<div class="question">${q.question}<br>${q.options.join("<br>")}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`;
+  });
+
+  html += "<h3>判断题</h3>";
+  data.judge.forEach(q => {
+    html += `<div class="question">${q.question}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`;
+  });
+
+  html += "<h3>问答题</h3>";
+  data.qa.forEach(q => {
+    html += `<div class="question">${q.question}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`;
+  });
+
+  document.getElementById("result").innerHTML = html;
+}
+</script>
+</body>
+</html>

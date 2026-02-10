@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<title>Knowledge → Questions</title>
+<style>
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  background: #ffffff;
+  color: #111;
+  margin: 0;
+  padding: 40px;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+textarea {
+  width: 100%;
+  height: 220px;
+  padding: 14px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  resize: vertical;
+}
+button {
+  margin-top: 16px;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+button:hover {
+  opacity: 0.9;
+}
+.section {
+  margin-top: 40px;
+}
+.section h2 {
+  font-size: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+.question {
+  margin: 14px 0;
+  font-size: 14px;
+}
+.option {
+  margin-left: 18px;
+}
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 40px 0;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Article → Question Generator</h1>
+
+  <textarea id="inputText" placeholder="粘贴你的文章内容（支持几千字）"></textarea>
+  <br>
+  <button onclick="generate()">生成题目</button>
+
+  <div id="output"></div>
+</div>
+
+<script>
+function generate() {
+  const text = document.getElementById("inputText").value.trim();
+  if (!text) return;
+
+  const sentences = text
+    .replace(/\n/g, "")
+    .split(/。|！|\?/)
+
+    .filter(s => s.length > 12);
+
+  let output = "";
+
+  /* 选择题 */
+  output += `<div class="section"><h2>一、选择题</h2>`;
+  sentences.slice(0, 5).forEach((s, i) => {
+    const key = s.slice(0, 10);
+    output += `
+      <div class="question">
+        ${i + 1}. 以下关于「${key}」的说法，正确的是：
+        <div class="option">A. ${s}</div>
+        <div class="option">B. 与原文无关</div>
+        <div class="option">C. 完全相反</div>
+        <div class="option">D. 无法判断</div>
+      </div>
+    `;
+  });
+  output += `</div><hr>`;
+
+  /* 判断题 */
+  output += `<div class="section"><h2>二、判断题</h2>`;
+  sentences.slice(5, 10).forEach((s, i) => {
+    output += `
+      <div class="question">
+        ${i + 1}. 「${s}」是否正确？（√ / ×）
+      </div>
+    `;
+  });
+  output += `</div><hr>`;
+
+  /* 问答题 */
+  output += `<div class="section"><h2>三、问答题</h2>`;
+  sentences.slice(10, 15).forEach((s, i) => {
+    output += `
+      <div class="question">
+        ${i + 1}. 请简要说明：${s.slice(0, 20)}……
+      </div>
+    `;
+  });
+  output += `</div>`;
+
+  document.getElementById("output").innerHTML = output;
+}
+</script>
+</body>
+</html>
