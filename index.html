@@ -1,178 +1,186 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3J58R70BFY"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-3J58R70BFY');
-  </script>
-<meta charset="UTF-8" />
-<title>知识 → 问题</title>
-<style>
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
-  background: #ffffff;
-  color: #111;
-  margin: 0;
-  padding: 50px;
+<!DOCTYPE html> <!-- HTML5文档类型声明 -->
+<html lang="zh"> <!-- 根元素，设置页面语言为中文 -->
+<head> <!-- 头部区域，包含页面元信息 -->
+  <!-- Google tag (gtag.js) --> <!-- Google Analytics分析代码 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3J58R70BFY"></script> <!-- 异步加载Google Analytics脚本 -->
+  <script> <!-- 配置Google Analytics的JavaScript代码 -->
+    window.dataLayer = window.dataLayer || []; <!-- 初始化数据层数组 -->
+    function gtag(){dataLayer.push(arguments);} <!-- 定义gtag函数用于发送数据 -->
+    gtag('js', new Date()); <!-- 记录脚本加载时间 -->
+    gtag('config', 'G-3J58R70BFY'); <!-- 配置Google Analytics跟踪ID -->
+  </script> <!-- 结束Google Analytics配置 -->
+<meta charset="UTF-8" /> <!-- 设置页面字符编码为UTF-8 -->
+<title>知识 → 问题</title> <!-- 设置页面标题 -->
+<style> <!-- 内联样式表 -->
+body { <!-- 页面主体样式 -->
+  font-family: system-ui, -apple-system, BlinkMacSystemFont; <!-- 设置字体族 -->
+  background: #ffffff; <!-- 设置背景色为白色 -->
+  color: #111; <!-- 设置文本颜色为深灰色 -->
+  margin: 0; <!-- 清除默认外边距 -->
+  padding: 50px; <!-- 设置内边距为50px -->
 }
-.container {
-  max-width: 1000px;
-  margin: auto;
+.container { <!-- 容器样式 -->
+  max-width: 1000px; <!-- 最大宽度为1000px -->
+  margin: auto; <!-- 水平居中 -->
 }
-h1 {
-  font-size: 30px;
-  font-weight: 800;
-  margin-bottom: 50px;
-}
-textarea {
-  width: 100%;
-  height: 220px;
-  padding: 14px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  resize: vertical;
-}
-button {
-  margin-top: 16px;
-  padding: 10px 18px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: none;
-  background: #111;
-  color: #fff;
-  cursor: pointer;
-}
-button:hover {
-  opacity: 0.9;
-}
-.section {
-  margin-top: 40px;
-}
-.section h2 {
-  font-size: 16px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 6px;
-}
-.question {
-  margin: 14px 0;
-  font-size: 14px;
-}
-.option {
-  margin-left: 18px;
-}
-hr {
-  border: none;
-  border-top: 1px solid #eee;
-  margin: 60px 0;
-}
-</style>
-</head>
 
-<body>
-<div class="container">
-  <h1>Knowledge to Shorthand <br><span style="font-size: 0.2em;">知识 → 问题</span></h1>
+h1 { <!-- 一级标题样式 -->
+  font-size: 30px; <!-- 字体大小30px -->
+  font-weight: 800; <!-- 字重800（粗体） -->
+  margin-bottom: 50px; <!-- 底部外边距50px -->
+}
 
-  <textarea id="inputText" placeholder="粘贴你的文章内容（支持几千字）"></textarea>
-  <br>
-  <button onclick="generate()">生成题目</button>
+textarea { <!-- 文本框样式 -->
+  width: 100%; <!-- 宽度100% -->
+  height: 220px; <!-- 高度220px -->
+  padding: 14px; <!-- 内边距14px -->
+  font-size: 14px; <!-- 字体大小14px -->
+  border: 1px solid #ddd; <!-- 边框1px，浅灰色 -->
+  border-radius: 6px; <!-- 圆角6px -->
+  resize: vertical; <!-- 允许垂直调整大小 -->
+}
 
-  <div id="output"></div>
-</div>
+button { <!-- 按钮样式 -->
+  margin-top: 16px; <!-- 顶部外边距16px -->
+  padding: 10px 18px; <!-- 内边距10px 18px -->
+  font-size: 14px; <!-- 字体大小14px -->
+  border-radius: 6px; <!-- 圆角6px -->
+  border: none; <!-- 无边框 -->
+  background: #111; <!-- 背景色深灰色 -->
+  color: #fff; <!-- 文本颜色白色 -->
+  cursor: pointer; <!-- 鼠标悬停时显示手型指针 -->
+}
 
-<script>
-function generate() {
-  const text = document.getElementById("inputText").value.trim();
-  if (!text) return;
+button:hover { <!-- 按钮悬停样式 -->
+  opacity: 0.9; <!-- 透明度0.9 -->
+}
+
+.section { <!-- 章节样式 -->
+  margin-top: 40px; <!-- 顶部外边距40px -->
+}
+
+.section h2 { <!-- 章节标题样式 -->
+  font-size: 16px; <!-- 字体大小16px -->
+  border-bottom: 1px solid #eee; <!-- 底部边框1px，浅灰色 -->
+  padding-bottom: 6px; <!-- 底部内边距6px -->
+}
+
+.question { <!-- 问题样式 -->
+  margin: 14px 0; <!-- 上下外边距14px -->
+  font-size: 14px; <!-- 字体大小14px -->
+}
+
+.option { <!-- 选项样式 -->
+  margin-left: 18px; <!-- 左侧外边距18px -->
+}
+r { <!-- 水平分隔线样式 -->
+  border: none; <!-- 清除默认边框 -->
+  border-top: 1px solid #eee; <!-- 顶部边框1px，浅灰色 -->
+  margin: 60px 0; <!-- 上下外边距60px -->
+}
+</style> <!-- 结束内联样式表 -->
+</head> <!-- 结束头部区域 -->
+
+<body> <!-- 主体区域 -->
+<div class="container"> <!-- 容器 -->
+  <h1 style="text-align: left;">Quickly generate knowledge point mastery test<br><span style="font-size: 0.8em;">知识点掌握测试快速生成</span></h1> <!-- 页面标题，英文在上，中文在下且字号减半 -->
+
+  <textarea id="inputText" placeholder="粘贴你的文章内容（支持几千字）"></textarea> <!-- 文本输入框，用于输入文章内容 -->
+  <br> <!-- 换行 -->
+  <button onclick="generate()">生成题目</button> <!-- 生成题目按钮，点击触发generate函数 -->
+
+  <div id="output"></div> <!-- 输出容器，用于显示生成的题目 -->
+</div> <!-- 结束容器 -->
+
+<script> <!-- JavaScript代码 -->
+function generate() { <!-- 生成题目主函数 -->
+  const text = document.getElementById("inputText").value.trim(); <!-- 获取输入文本并去除首尾空格 -->
+  if (!text) return; <!-- 如果文本为空，直接返回 -->
 
   // 改进的文本分析
-  const sentences = text
-    .replace(/\n+/g, "")
-    .split(/。|！|\?|？|!/)
-    .filter(s => s.length > 15)
-    .map(s => s.trim());
+  const sentences = text <!-- 将文本分割为句子 -->
+    .replace(/\n+/g, "") <!-- 替换所有换行符为空字符串 -->
+    .split(/。|！|\?|？|!/) <!-- 按中文和英文标点符号分割句子 -->
+    .filter(s => s.length > 15) <!-- 过滤掉长度小于15的短句 -->
+    .map(s => s.trim()); <!-- 去除每个句子首尾空格 -->
 
   // 识别关键句子（包含数字、专有名词、结论性词汇的句子更重要）
-  const keySentences = sentences.filter(s => {
-    return /[0-9]|关键|重要|核心|必须|应该|因此|所以|结论|表明|显示|证明/.test(s);
+  const keySentences = sentences.filter(s => { <!-- 过滤出关键句子 -->
+    return /[0-9]|关键|重要|核心|必须|应该|因此|所以|结论|表明|显示|证明/.test(s); <!-- 使用正则表达式匹配关键词汇 -->
   });
 
   // 如果关键句子不足，使用普通句子补充
-  const allSentences = keySentences.length > 0 ? [...keySentences, ...sentences] : sentences;
+  const allSentences = keySentences.length > 0 ? [...keySentences, ...sentences] : sentences; <!-- 合并关键句子和普通句子 -->
   // 去重
-  const uniqueSentences = [...new Set(allSentences)];
+  const uniqueSentences = [...new Set(allSentences)]; <!-- 使用Set去除重复句子 -->
 
-  let output = "";
+  let output = ""; <!-- 初始化输出HTML字符串 -->
 
   /* 选择题 */
-  output += `<div class="section"><h2>一、选择题</h2>`;
-  uniqueSentences.slice(0, 5).forEach((s, i) => {
+  output += `<div class="section"><h2>一、选择题</h2>`; <!-- 添加选择题标题 -->
+  uniqueSentences.slice(0, 5).forEach((s, i) => { <!-- 取前5个句子生成选择题 -->
     // 提取关键信息作为问题核心
-    const keyInfo = extractKeyInfo(s);
-    const question = generateMultipleChoiceQuestion(s, keyInfo, i + 1);
-    output += question;
+    const keyInfo = extractKeyInfo(s); <!-- 提取句子中的关键信息 -->
+    const question = generateMultipleChoiceQuestion(s, keyInfo, i + 1); <!-- 生成选择题HTML -->
+    output += question; <!-- 添加到输出字符串 -->
   });
-  output += `</div><hr>`;
+  output += `</div><hr>`; <!-- 结束选择题部分并添加分隔线 -->
 
   /* 判断题 */
-  output += `<div class="section"><h2>二、判断题</h2>`;
-  uniqueSentences.slice(5, 10).forEach((s, i) => {
-    const question = generateTrueFalseQuestion(s, i + 1);
-    output += question;
+  output += `<div class="section"><h2>二、判断题</h2>`; <!-- 添加判断题标题 -->
+  uniqueSentences.slice(5, 10).forEach((s, i) => { <!-- 取第6-10个句子生成判断题 -->
+    const question = generateTrueFalseQuestion(s, i + 1); <!-- 生成判断题HTML -->
+    output += question; <!-- 添加到输出字符串 -->
   });
-  output += `</div><hr>`;
+  output += `</div><hr>`; <!-- 结束判断题部分并添加分隔线 -->
 
   /* 问答题 */
-  output += `<div class="section"><h2>三、问答题</h2>`;
-  uniqueSentences.slice(10, 15).forEach((s, i) => {
-    const question = generateShortAnswerQuestion(s, i + 1);
-    output += question;
+  output += `<div class="section"><h2>三、问答题</h2>`; <!-- 添加问答题标题 -->
+  uniqueSentences.slice(10, 15).forEach((s, i) => { <!-- 取第11-15个句子生成问答题 -->
+    const question = generateShortAnswerQuestion(s, i + 1); <!-- 生成问答题HTML -->
+    output += question; <!-- 添加到输出字符串 -->
   });
-  output += `</div>`;
+  output += `</div>`; <!-- 结束问答题部分 -->
 
-  document.getElementById("output").innerHTML = output;
+  document.getElementById("output").innerHTML = output; <!-- 将生成的题目HTML插入到输出容器 -->
 }
 
 // 提取关键信息
-function extractKeyInfo(sentence) {
+function extractKeyInfo(sentence) { <!-- 提取句子关键信息函数 -->
   // 查找包含关键信息的短语
-  const keyPatterns = [
-    /[0-9]+(年|月|日|天|小时|分钟|秒|次|个|件|人|元|米|千克)/,
-    /[A-Za-z0-9_]+/,
-    /[\u4e00-\u9fa5]{2,}(理论|方法|技术|原则|定律|定理|概念|模型|系统)/,
-    /必须|应该|禁止|允许|可以|不可以/,
-    /核心|关键|重要|主要|次要|首先|其次|最后/
+  const keyPatterns = [ <!-- 关键信息正则表达式数组 -->
+    /[0-9]+(年|月|日|天|小时|分钟|秒|次|个|件|人|元|米|千克)/, <!-- 匹配带单位的数字 -->
+    /[A-Za-z0-9_]+/, <!-- 匹配英文单词、数字和下划线组合 -->
+    /[\u4e00-\u9fa5]{2,}(理论|方法|技术|原则|定律|定理|概念|模型|系统)/, <!-- 匹配中文专业术语 -->
+    /必须|应该|禁止|允许|可以|不可以/, <!-- 匹配模态词 -->
+    /核心|关键|重要|主要|次要|首先|其次|最后/ <!-- 匹配程度词 -->
   ];
 
-  for (const pattern of keyPatterns) {
-    const match = sentence.match(pattern);
-    if (match) {
-      return match[0];
+  for (const pattern of keyPatterns) { <!-- 遍历正则表达式数组 -->
+    const match = sentence.match(pattern); <!-- 在句子中匹配关键信息 -->
+    if (match) { <!-- 如果找到匹配 -->
+      return match[0]; <!-- 返回匹配到的关键信息 -->
     }
   }
   
   // 如果没有找到特定模式，返回句子前15个字符
-  return sentence.slice(0, 15);
+  return sentence.slice(0, 15); <!-- 返回句子前15个字符作为关键信息 -->
 }
 
 // 生成选择题
-function generateMultipleChoiceQuestion(sentence, keyInfo, questionNum) {
+function generateMultipleChoiceQuestion(sentence, keyInfo, questionNum) { <!-- 生成选择题函数 -->
   // 生成更有意义的干扰项
-  const distractors = generateDistractors(sentence, keyInfo);
-  const options = [keyInfo, ...distractors].sort(() => Math.random() - 0.5);
-  const correctIndex = options.indexOf(keyInfo);
-  const optionLabels = ['A', 'B', 'C', 'D'];
+  const distractors = generateDistractors(sentence, keyInfo); <!-- 生成干扰项 -->
+  const options = [keyInfo, ...distractors].sort(() => Math.random() - 0.5); <!-- 合并正确答案和干扰项并随机排序 -->
+  const correctIndex = options.indexOf(keyInfo); <!-- 记录正确答案索引 -->
+  const optionLabels = ['A', 'B', 'C', 'D']; <!-- 选项标签 -->
 
-  let questionHtml = `
+  let questionHtml = ` <!-- 初始化选择题HTML -->
     <div class="question">
       ${questionNum}. 「${sentence}」中的关键概念是：
   `;
 
-  options.forEach((option, j) => {
+  options.forEach((option, j) => { <!-- 遍历选项生成HTML -->
     questionHtml += `
         <div class="option">${optionLabels[j]}. ${option}</div>
     `;
@@ -181,78 +189,78 @@ function generateMultipleChoiceQuestion(sentence, keyInfo, questionNum) {
   questionHtml += `
       <div class="option" style="color: #666; font-size: 12px; margin-top: 8px;">正确答案：${optionLabels[correctIndex]}</div>
     </div>
-  `;
+  `; <!-- 添加正确答案 -->
 
-  return questionHtml;
+  return questionHtml; <!-- 返回选择题HTML -->
 }
 
 // 生成干扰项
-function generateDistractors(sentence, keyInfo) {
-  const distractors = [];
+function generateDistractors(sentence, keyInfo) { <!-- 生成干扰项函数 -->
+  const distractors = []; <!-- 初始化干扰项数组 -->
   
   // 干扰项1：相关但不同的概念
-  const relatedConcepts = ["相关概念A", "相关概念B", "类似概念", "相近术语"];
-  distractors.push(relatedConcepts[Math.floor(Math.random() * relatedConcepts.length)]);
+  const relatedConcepts = ["相关概念A", "相关概念B", "类似概念", "相近术语"]; <!-- 相关概念数组 -->
+  distractors.push(relatedConcepts[Math.floor(Math.random() * relatedConcepts.length)]); <!-- 随机选择一个相关概念 -->
 
   // 干扰项2：错误的关键信息
-  let wrongInfo = keyInfo;
-  if (/\d+/.test(wrongInfo)) {
-    wrongInfo = wrongInfo.replace(/\d+/, (match) => {
-      const num = parseInt(match);
-      return num + Math.floor(Math.random() * 10) + 1;
+  let wrongInfo = keyInfo; <!-- 复制关键信息 -->
+  if (/\d+/.test(wrongInfo)) { <!-- 如果包含数字 -->
+    wrongInfo = wrongInfo.replace(/\d+/, (match) => { <!-- 替换数字为其他数字 -->
+      const num = parseInt(match); <!-- 转换为数字 -->
+      return num + Math.floor(Math.random() * 10) + 1; <!-- 加上1-10的随机数 -->
     });
-  } else if (wrongInfo.length > 2) {
-    wrongInfo = wrongInfo.slice(0, -1) + (wrongInfo[wrongInfo.length - 1] === '的' ? '地' : '的');
-  } else {
-    wrongInfo += "错误";
+  } else if (wrongInfo.length > 2) { <!-- 如果长度大于2 -->
+    wrongInfo = wrongInfo.slice(0, -1) + (wrongInfo[wrongInfo.length - 1] === '的' ? '地' : '的'); <!-- 替换"的"和"地" -->
+  } else { <!-- 否则 -->
+    wrongInfo += "错误"; <!-- 添加"错误"后缀 -->
   }
-  distractors.push(wrongInfo);
+  distractors.push(wrongInfo); <!-- 添加到干扰项数组 -->
 
   // 干扰项3：反义词或对立概念
-  const antonyms = ["相反概念", "对立概念", "否定形式", "相反意义"];
-  distractors.push(antonyms[Math.floor(Math.random() * antonyms.length)]);
+  const antonyms = ["相反概念", "对立概念", "否定形式", "相反意义"]; <!-- 反义词数组 -->
+  distractors.push(antonyms[Math.floor(Math.random() * antonyms.length)]); <!-- 随机选择一个反义词 -->
 
-  return distractors;
+  return distractors; <!-- 返回干扰项数组 -->
 }
 
 // 生成判断题
-function generateTrueFalseQuestion(sentence, questionNum) {
+function generateTrueFalseQuestion(sentence, questionNum) { <!-- 生成判断题函数 -->
   // 随机生成正确或错误的陈述
   const isTrue = Math.random() > 0.3; // 70%概率为真
-  let statement = sentence;
+  let statement = sentence; <!-- 复制原句子 -->
   
-  if (!isTrue) {
+  if (!isTrue) { <!-- 如果生成错误陈述 -->
     // 生成错误陈述
-    let modified = false;
+    let modified = false; <!-- 标记是否已修改 -->
     
     // 尝试多种方式修改句子
-    if (statement.includes("是")) {
-      statement = statement.replace("是", "不是");
-      modified = true;
-    } else if (statement.includes("有")) {
-      statement = statement.replace("有", "没有");
-      modified = true;
-    } else if (statement.includes("可以")) {
-      statement = statement.replace("可以", "不可以");
-      modified = true;
-    } else if (statement.includes("必须")) {
-      statement = statement.replace("必须", "不必");
-      modified = true;
-    } else if (statement.match(/\d+/)) {
-      statement = statement.replace(/\d+/, (match) => {
-        const num = parseInt(match);
-        return num + Math.floor(Math.random() * 10) + 1;
+    if (statement.includes("是")) { <!-- 如果包含"是" -->
+      statement = statement.replace("是", "不是"); <!-- 替换为"不是" -->
+      modified = true; <!-- 标记已修改 -->
+    } else if (statement.includes("有")) { <!-- 如果包含"有" -->
+      statement = statement.replace("有", "没有"); <!-- 替换为"没有" -->
+      modified = true; <!-- 标记已修改 -->
+    } else if (statement.includes("可以")) { <!-- 如果包含"可以" -->
+      statement = statement.replace("可以", "不可以"); <!-- 替换为"不可以" -->
+      modified = true; <!-- 标记已修改 -->
+    } else if (statement.includes("必须")) { <!-- 如果包含"必须" -->
+      statement = statement.replace("必须", "不必"); <!-- 替换为"不必" -->
+      modified = true; <!-- 标记已修改 -->
+    } else if (statement.match(/\d+/)) { <!-- 如果包含数字 -->
+      statement = statement.replace(/\d+/, (match) => { <!-- 替换数字 -->
+        const num = parseInt(match); <!-- 转换为数字 -->
+        return num + Math.floor(Math.random() * 10) + 1; <!-- 加上1-10的随机数 -->
       });
-      modified = true;
+      modified = true; <!-- 标记已修改 -->
     } 
     
     // 如果无法修改，添加否定前缀
-    if (!modified) {
-      statement = "以下描述错误：" + statement;
+    if (!modified) { <!-- 如果未修改 -->
+      statement = "以下描述错误：" + statement; <!-- 添加错误前缀 -->
     }
   }
 
-  return `
+  return ` <!-- 返回判断题HTML -->
     <div class="question">
       ${questionNum}. 「${statement}」是否正确？（√ / ×）
       <div style="color: #666; font-size: 12px; margin-top: 4px;">正确答案：${isTrue ? "√" : "×"}</div>
@@ -261,24 +269,24 @@ function generateTrueFalseQuestion(sentence, questionNum) {
 }
 
 // 生成问答题
-function generateShortAnswerQuestion(sentence, questionNum) {
-  const keyInfo = extractKeyInfo(sentence);
-  let question = "";
+function generateShortAnswerQuestion(sentence, questionNum) { <!-- 生成问答题函数 -->
+  const keyInfo = extractKeyInfo(sentence); <!-- 提取关键信息 -->
+  let question = ""; <!-- 初始化问题 -->
   
-  if (sentence.includes("为什么")) {
-    question = "请解释为什么" + sentence.replace("为什么", "");
-  } else if (sentence.includes("是什么")) {
-    question = sentence;
-  } else {
-    question = `请简述「${keyInfo}」的相关内容`;
+  if (sentence.includes("为什么")) { <!-- 如果原句包含"为什么" -->
+    question = "请解释为什么" + sentence.replace("为什么", ""); <!-- 生成解释类问题 -->
+  } else if (sentence.includes("是什么")) { <!-- 如果原句包含"是什么" -->
+    question = sentence; <!-- 直接使用原句作为问题 -->
+  } else { <!-- 否则 -->
+    question = `请简述「${keyInfo}」的相关内容`; <!-- 生成简述类问题 -->
   }
 
-  return `
+  return ` <!-- 返回问答题HTML -->
     <div class="question">
       ${questionNum}. ${question}
     </div>
   `;
 }
-</script>
-</body>
-</html>
+</script> <!-- 结束JavaScript代码 -->
+</body> <!-- 结束主体区域 -->
+</html> <!-- 结束HTML文档 -->
