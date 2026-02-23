@@ -17,6 +17,8 @@ body {                                                                       <!-
   background: #ffffff;                                                       <!-- 设置背景色为白色 -->
   color: #111;                                                               <!-- 设置文本颜色为深灰色 -->
   padding: 450px;                                                             <!-- 设置内边距为450px -->
+  -webkit-transform: translateX(40mm);
+  transform: translateX(40mm);
 }
 .container {                                                                 <!-- 容器样式 -->
   max-width: 20000px;                                                         <!-- 最大宽度为20000px -->
@@ -30,7 +32,7 @@ h1 {                                                                         <!-
   margin-bottom: 50px;                                                       <!-- 底部外边距50px -->
 }
 
-textarea {                                                                   <!-- 文本框样式 -->
+<textarea {                                                                   <!-- 文本框样式 -->
   width: 9350px;                                                              <!-- 宽度935px -->
   height: 3550px;                                                             <!-- 高度355px -->
   padding: 500px;                                                             <!-- 内边距14px -->
@@ -102,7 +104,7 @@ function generate() {                                                         <!
   // 改进的文本分析
   const sentences = text                                                    <!-- 将文本分割为句子 -->
     .replace(/\n+/g, "")                                                  <!-- 替换所有换行符为空字符串 -->
-    .split(/。|！|\?|？|!/)                                               <!-- 按中文和英文标点符号分割句子 -->
+    .split(/。|！|\?|？|!/);                                               <!-- 按中文和英文标点符号分割句子 -->
     .filter(s => s.length > 15)                                            <!-- 过滤掉长度小于15的短句 -->
     .map(s => s.trim());                                                   <!-- 去除每个句子首尾空格 -->
 
@@ -119,7 +121,7 @@ function generate() {                                                         <!
   let output = "";                                                         <!-- 初始化输出HTML字符串 -->
 
   /* 选择题 */
-  output += `<div class="section"><h2>一、选择题</h2>`;                     <!-- 添加选择题标题 -->
+  output += `<div class=\"section\"><h2>一、选择题</h2>`;                     <!-- 添加选择题标题 -->
   uniqueSentences.slice(0, 5).forEach((s, i) => {                             <!-- 取前5个句子生成选择题 -->
     // 提取关键信息作为问题核心
     const keyInfo = extractKeyInfo(s);                                       <!-- 提取句子中的关键信息 -->
@@ -129,7 +131,7 @@ function generate() {                                                         <!
   output += `</div><hr>`;                                                    <!-- 结束选择题部分并添加分隔线 -->
 
   /* 判断题 */
-  output += `<div class="section"><h2>二、判断题</h2>`;                     <!-- 添加判断题标题 -->
+  output += `<div class=\"section\"><h2>二、判断题</h2>`;                     <!-- 添加判断题标题 -->
   uniqueSentences.slice(5, 10).forEach((s, i) => {                            <!-- 取第6-10个句子生成判断题 -->
     const question = generateTrueFalseQuestion(s, i + 1);                    <!-- 生成判断题HTML -->
     output += question;                                                      <!-- 添加到输出字符串 -->
@@ -137,7 +139,7 @@ function generate() {                                                         <!
   output += `</div><hr>`;                                                    <!-- 结束判断题部分并添加分隔线 -->
 
   /* 问答题 */
-  output += `<div class="section"><h2>三、问答题</h2>`;                     <!-- 添加问答题标题 -->
+  output += `<div class=\"section\"><h2>三、问答题</h2>`;                     <!-- 添加问答题标题 -->
   uniqueSentences.slice(10, 15).forEach((s, i) => {                           <!-- 取第11-15个句子生成问答题 -->
     const question = generateShortAnswerQuestion(s, i + 1);                  <!-- 生成问答题HTML -->
     output += question;                                                      <!-- 添加到输出字符串 -->
@@ -178,18 +180,18 @@ function generateMultipleChoiceQuestion(sentence, keyInfo, questionNum) {      <
   const optionLabels = ['A', 'B', 'C', 'D'];                                 <!-- 选项标签 -->
 
   let questionHtml = `                                                       <!-- 初始化选择题HTML -->
-    <div class="question">
+    <div class=\"question\">
       ${questionNum}. 「${sentence}」中的关键概念是：
   `;
 
   options.forEach((option, j) => {                                            <!-- 遍历选项生成HTML -->
     questionHtml += `
-        <div class="option">${optionLabels[j]}. ${option}</div>
+        <div class=\"option\">${optionLabels[j]}. ${option}</div>
     `;
   });
 
   questionHtml += `
-      <div class="option" style="color: #666; font-size: 12px; margin-top: 8px;">正确答案：${optionLabels[correctIndex]}</div>
+      <div class=\"option\" style=\"color: #666; font-size: 12px; margin-top: 8px;\">正确答案：${optionLabels[correctIndex]}</div>
     </div>
   `;                                                                         <!-- 添加正确答案 -->
 
@@ -201,12 +203,13 @@ function generateDistractors(sentence, keyInfo) {                             <!
   const distractors = [];                                                    <!-- 初始化干扰项数组 -->
   
   // 干扰项1：相关但不同的概念
-  const relatedConcepts = ["相关概念A", "相关概念B", "类似概念", "相近术语"]; <!-- 相关概念数组 -->
+  const relatedConcepts = ["相关概念A", "相关概念B", "类似概念", "相近���语"]; <!-- 相关概念数组 -->
   distractors.push(relatedConcepts[Math.floor(Math.random() * relatedConcepts.length)]); <!-- 随机选择一个相关概念 -->
 
   // 干扰项2：错误的关键信息
   let wrongInfo = keyInfo;                                                   <!-- 复制关键信息 -->
-  if (/\d+/.test(wrongInfo)) {                                               <!-- 如果包含数字 -->
+  if (/
++/g.test(wrongInfo)) {                                               <!-- 如果包含数字 -->
     wrongInfo = wrongInfo.replace(/\d+/, (match) => {                       <!-- 替换数字为其他数字 -->
       const num = parseInt(match);                                           <!-- 转换为数字 -->
       return num + Math.floor(Math.random() * 10) + 1;                       <!-- 加上1-10的随机数 -->
@@ -246,7 +249,7 @@ function generateTrueFalseQuestion(sentence, questionNum) {                    <
       statement = statement.replace("可以", "不可以");                          <!-- 替换为"不可以" -->
       modified = true;                                                         <!-- 标记已修改 -->
     } else if (statement.includes("必须")) {                                    <!-- 如果包含"必须" -->
-      statement = statement.replace("必须", "不必");                            <!-- 替换为"不必" -->
+      statement = statement.replace("必须", "不必");                            <!-- 替��为"不必" -->
       modified = true;                                                         <!-- 标记已修改 -->
     } else if (statement.match(/\d+/)) {                                       <!-- 如果包含数字 -->
       statement = statement.replace(/\d+/, (match) => {                       <!-- 替换数字 -->
@@ -263,9 +266,9 @@ function generateTrueFalseQuestion(sentence, questionNum) {                    <
   }
 
   return `                                                                     <!-- 返回判断题HTML -->
-    <div class="question">
+    <div class=\"question\">
       ${questionNum}. 「${statement}」是否正确？（√ / ×）
-      <div style="color: #666; font-size: 12px; margin-top: 4px;">正确答案：${isTrue ? "√" : "×"}</div>
+      <div style=\"color: #666; font-size: 12px; margin-top: 4px;\">正确答案：${isTrue ? "√" : "×"}</div>
     </div>
   `;
 }
@@ -284,11 +287,12 @@ function generateShortAnswerQuestion(sentence, questionNum) {                   
   }
 
   return `                                                                     <!-- 返回问答题HTML -->
-    <div class="question">
+    <div class=\"question\">
       ${questionNum}. ${question}
     </div>
   `;
 }
+
 </script>                                                                     <!-- 结束JavaScript代码 -->
 </body>                                                                       <!-- 结束主体区域 -->
-</html>                                                                       <!-- 结束HTML文档 -->
+</html>
