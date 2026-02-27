@@ -1,298 +1,1140 @@
-<!DOCTYPE html>                                                              <!-- HTML5文档类型声明 -->
-<html lang="zh">                                                           <!-- 根元素，设置页面语言为中文 -->
-<head>                                                                       <!-- 头部区域，包含页面元信息 -->
-  <!-- Google tag (gtag.js) -->                                              <!-- Google Analytics分析代码 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3J58R70BFY"></script> <!-- 异步加载Google Analytics脚本 -->
-  <script>                                                                   <!-- 配置Google Analytics的JavaScript代码 -->
-    window.dataLayer = window.dataLayer || [];                               <!-- 初始化数据层数组 -->
-    function gtag(){dataLayer.push(arguments);}                              <!-- 定义gtag函数用于发送数据 -->
-    gtag('js', new Date());                                                  <!-- 记录脚本加载时间 -->
-    gtag('config', 'G-3J58R70BFY');                                          <!-- 配置Google Analytics跟踪ID -->
-  </script>                                                                  <!-- 结束Google Analytics配置 -->
-<meta charset="UTF-8" />                                                     <!-- 设置页面字符编码为UTF-8 -->
-<title>知识 → 问题</title>                                                    <!-- 设置页面标题 -->
-<style>                                                                       <!-- 内联样式表 -->
-body {                                                                       <!-- 页面主体样式 -->
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;                 <!-- 设置字体族 -->
-  background: #ffffff;                                                       <!-- 设置背景色为白色 -->
-  color: #111;                                                               <!-- 设置文本颜色为深灰色 -->
-  padding: 450px;                                                             <!-- 设置内边距为450px -->
-  -webkit-transform: translateX(40mm);
-  transform: translateX(4cm);
-}
-.container {                                                                 <!-- 容器样式 -->
-  max-width: 20000px;                                                         <!-- 最大宽度为20000px -->
-  margin-left: 160cm;                                                         <!-- 左外边距12cm，增加了3厘米的左侧边距 -->
-  margin-right: ;                                                             <!-- 右外边距自动 -->
-}
-
-h1 {                                                                         <!-- 一级标题样式 -->
-  font-size: 30px;                                                           <!-- 字体大小30px -->
-  font-weight: 800;                                                          <!-- 字重800（粗体） -->
-  margin-bottom: 50px;                                                       <!-- 底部外边距50px -->
-}
-
-<textarea {                                                                   <!-- 文本框样式 -->
-  width: 9350px;                                                              <!-- 宽度935px -->
-  height: 3550px;                                                             <!-- 高度355px -->
-  padding: 500px;                                                             <!-- 内边距14px -->
-  font-size: 25px;                                                           <!-- 字体大小15px -->
-  border: 1px solid #ddd;                                                    <!-- 边框1px，浅灰色 -->
-  border-radius: 4px;                                                        <!-- 圆角4px -->
-  resize: vertical;                                                          <!-- 允许垂直调整大小 -->
-}
-
-button {                                                                     <!-- 按钮样式 -->
-  margin-top: 16px;                                                          <!-- 顶部外边距16px -->
-  padding: 10px 18px;                                                        <!-- 内边距10px 18px -->
-  font-size: 14px;                                                           <!-- 字体大小14px -->
-  border-radius: 6px;                                                        <!-- 圆角6px -->
-  border: none;                                                              <!-- 无边框 -->
-  background: #111;                                                          <!-- 背景色深灰色 -->
-  color: #fff;                                                               <!-- 文本颜色白色 -->
-  cursor: pointer;                                                           <!-- 鼠标悬停时显示手型指针 -->
-}
-
-button:hover {                                                               <!-- 按钮悬停样式 -->
-  opacity: 0.9;                                                              <!-- 透明度0.9 -->
-}
-
-.section {                                                                   <!-- 章节样式 -->
-  margin-top: 40px;                                                          <!-- 顶部外边距40px -->
-}
-
-.section h2 {                                                                <!-- 章节标题样式 -->
-  font-size: 16px;                                                           <!-- 字体大小16px -->
-  border-bottom: 1px solid #eee;                                             <!-- 底部边框1px，浅灰色 -->
-  padding-bottom: 6px;                                                       <!-- 底部内边距6px -->
-}
-
-.question {                                                                  <!-- 问题样式 -->
-  margin: 14px 0;                                                            <!-- 上下外边距14px -->
-  font-size: 14px;                                                           <!-- 字体大小14px -->
-}
-
-.option {                                                                    <!-- 选项样式 -->
-  margin-left: 18px;                                                         <!-- 左侧外边距18px -->
-}
-
-hr {                                                                         <!-- 分隔线样式 -->
-  border: none;                                                              <!-- 无边框 -->
-  border-top: 1px solid #eee;                                                <!-- 顶部边框1px，浅灰色 -->
-  margin: 60px 0;                                                            <!-- 上下外边距60px -->
-}
-</style>                                                                     <!-- 结束样式表 -->
-
-</head>                                                                     <!-- 结束头部区域 -->
-
-<body>                                                                       <!-- 主体区域 -->
-<div class="container">                                                     <!-- 容器 -->
-  <h1>Quickly generate knowledge point mastery test<br><span style="font-size: 0.9em; font-family: 'Microsoft YaHei', sans-serif;">知识点掌握测试快速生成</span></h1>
-
-  <textarea id="inputText" placeholder="粘贴你的文章内容（支持几千字）"></textarea> <!-- 文本输入框，用于输入文章内容 -->
-  <br>                                                                       <!-- 换行 -->
-  <button onclick="generate()">生成题目</button>                           <!-- 生成题目按钮，点击触发generate函数 -->
-
-  <div id="output"></div>                                                   <!-- 输出结果区域 -->
-</div>                                                                       <!-- 结束容器 -->
-
-<script>                                                                     <!-- JavaScript代码 -->
-function generate() {                                                         <!-- 生成题目主函数 -->
-  const text = document.getElementById("inputText").value.trim();         <!-- 获取输入文本并去除首尾空格 -->
-  if (!text) return;                                                        <!-- 如果文本为空，直接返回 -->
-
-  // 改进的文本分析
-  const sentences = text                                                    <!-- 将文本分割为句子 -->
-    .replace(/\n+/g, "")                                                  <!-- 替换所有换行符为空字符串 -->
-    .split(/。|！|\?|？|!/);                                               <!-- 按中文和英文标点符号分割句子 -->
-    .filter(s => s.length > 15)                                            <!-- 过滤掉长度小于15的短句 -->
-    .map(s => s.trim());                                                   <!-- 去除每个句子首尾空格 -->
-
-  // 识别关键句子（包含数字、专有名词、结论性词汇的句子更重要）
-  const keySentences = sentences.filter(s => {                               <!-- 过滤出关键句子 -->
-    return /[0-9]|关键|重要|核心|必须|应该|因此|所以|结论|表明|显示|证明/.test(s); <!-- 使用正则表达式匹配关键词汇 -->
-  });
-
-  // 如果关键句子不足，使用普通句子补充
-  const allSentences = keySentences.length > 0 ? [...keySentences, ...sentences] : sentences; <!-- 合并关键句子和普通句子 -->
-  // 去重
-  const uniqueSentences = [...new Set(allSentences)];                        <!-- 使用Set去除重复句子 -->
-
-  let output = "";                                                         <!-- 初始化输出HTML字符串 -->
-
-  /* 选择题 */
-  output += `<div class=\"section\"><h2>一、选择题</h2>`;                     <!-- 添加选择题标题 -->
-  uniqueSentences.slice(0, 5).forEach((s, i) => {                             <!-- 取前5个句子生成选择题 -->
-    // 提取关键信息作为问题核心
-    const keyInfo = extractKeyInfo(s);                                       <!-- 提取句子中的关键信息 -->
-    const question = generateMultipleChoiceQuestion(s, keyInfo, i + 1);      <!-- 生成选择题HTML -->
-    output += question;                                                      <!-- 添加到输出字符串 -->
-  });
-  output += `</div><hr>`;                                                    <!-- 结束选择题部分并添加分隔线 -->
-
-  /* 判断题 */
-  output += `<div class=\"section\"><h2>二、判断题</h2>`;                     <!-- 添加判断题标题 -->
-  uniqueSentences.slice(5, 10).forEach((s, i) => {                            <!-- 取第6-10个句子生成判断题 -->
-    const question = generateTrueFalseQuestion(s, i + 1);                    <!-- 生成判断题HTML -->
-    output += question;                                                      <!-- 添加到输出字符串 -->
-  });
-  output += `</div><hr>`;                                                    <!-- 结束判断题部分并添加分隔线 -->
-
-  /* 问答题 */
-  output += `<div class=\"section\"><h2>三、问答题</h2>`;                     <!-- 添加问答题标题 -->
-  uniqueSentences.slice(10, 15).forEach((s, i) => {                           <!-- 取第11-15个句子生成问答题 -->
-    const question = generateShortAnswerQuestion(s, i + 1);                  <!-- 生成问答题HTML -->
-    output += question;                                                      <!-- 添加到输出字符串 -->
-  });
-  output += `</div>`;                                                        <!-- 结束问答题部分 -->
-
-  document.getElementById("output").innerHTML = output;                     <!-- 将生成的题目HTML插入到输出容器 -->
-}
-
-// 提取关键信息
-function extractKeyInfo(sentence) {                                         <!-- 提取句子关键信息函数 -->
-  // 查找包含关键信息的短语
-  const keyPatterns = [                                                     <!-- 关键信息正则表达式数组 -->
-    /[0-9]+(年|月|日|天|小时|分钟|秒|次|个|件|人|元|米|千克)/,              <!-- 匹配带单位的数字 -->
-    /[A-Za-z0-9_]+/,                                                        <!-- 匹配英文单词、数字和下划线组合 -->
-    /[\u4e00-\u9fa5]{2,}(理论|方法|技术|原则|定律|定理|概念|模型|系统)/,   <!-- 匹配中文专业术语 -->
-    /必须|应该|禁止|允许|可以|不可以/,                                      <!-- 匹配模态词 -->
-    /核心|关键|重要|主要|次要|首先|其次|最后/                               <!-- 匹配程度词 -->
-  ];
-
-  for (const pattern of keyPatterns) {                                      <!-- 遍历正则表达式数组 -->
-    const match = sentence.match(pattern);                                  <!-- 在句子中匹配关键信息 -->
-    if (match) {                                                            <!-- 如果找到匹配 -->
-      return match[0];                                                      <!-- 返回匹配到的关键信息 -->
-    }
-  }
-  
-  // 如果没有找到特定模式，返回句子前15个字符
-  return sentence.slice(0, 15);                                             <!-- 返回句子前15个字符作为关键信息 -->
-}
-
-// 生成选择题
-function generateMultipleChoiceQuestion(sentence, keyInfo, questionNum) {      <!-- 生成选择题函数 -->
-  // 生成更有意义的干扰项
-  const distractors = generateDistractors(sentence, keyInfo);                 <!-- 生成干扰项 -->
-  const options = [keyInfo, ...distractors].sort(() => Math.random() - 0.5);  <!-- 合并正确答案和干扰项并随机排序 -->
-  const correctIndex = options.indexOf(keyInfo);                              <!-- 记录正确答案索引 -->
-  const optionLabels = ['A', 'B', 'C', 'D'];                                 <!-- 选项标签 -->
-
-  let questionHtml = `                                                       <!-- 初始化选择题HTML -->
-    <div class=\"question\">
-      ${questionNum}. 「${sentence}」中的关键概念是：
-  `;
-
-  options.forEach((option, j) => {                                            <!-- 遍历选项生成HTML -->
-    questionHtml += `
-        <div class=\"option\">${optionLabels[j]}. ${option}</div>
-    `;
-  });
-
-  questionHtml += `
-      <div class=\"option\" style=\"color: #666; font-size: 12px; margin-top: 8px;\">正确答案：${optionLabels[correctIndex]}</div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="知识点掌握测试快速生成工具">
+    <title>知识点掌握测试快速生成</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">
+                <span class="chinese-title">知识点掌握测试快速生成</span>
+                <span class="english-title">Quickly generate knowledge point mastery test</span>
+            </h1>
+        </header>
+        
+        <main class="main-content">
+            <div class="input-section">
+                <textarea class="text-input" placeholder="请输入知识点内容..."></textarea>
+                <button class="generate-btn">生成问题</button>
+            </div>
+            
+            <!-- 问题展示区域 -->
+            <div class="questions-section">
+                <h2 class="section-title">测试题目</h2>
+                <div class="questions-container">
+                    <!-- 单选题区域 -->
+                    <div class="question-type-section">
+                        <h3 class="question-type-title">单选题</h3>
+                        <div id="single-choice-questions" class="questions-list"></div>
+                    </div>
+                    
+                    <!-- 判断题区域 -->
+                    <div class="question-type-section">
+                        <h3 class="question-type-title">判断题</h3>
+                        <div id="true-false-questions" class="questions-list"></div>
+                    </div>
+                    
+                    <!-- 简答题区域 -->
+                    <div class="question-type-section">
+                        <h3 class="question-type-title">简答题</h3>
+                        <div id="short-answer-questions" class="questions-list"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  `;                                                                         <!-- 添加正确答案 -->
-
-  return questionHtml;                                                        <!-- 返回选择题HTML -->
-}
-
-// 生成干扰项
-function generateDistractors(sentence, keyInfo) {                             <!-- 生成干扰项函数 -->
-  const distractors = [];                                                    <!-- 初始化干扰项数组 -->
-  
-  // 干扰项1：相关但不同的概念
-  const relatedConcepts = ["相关概念A", "相关概念B", "类似概念", "相近���语"]; <!-- 相关概念数组 -->
-  distractors.push(relatedConcepts[Math.floor(Math.random() * relatedConcepts.length)]); <!-- 随机选择一个相关概念 -->
-
-  // 干扰项2：错误的关键信息
-  let wrongInfo = keyInfo;                                                   <!-- 复制关键信息 -->
-  if (/
-+/g.test(wrongInfo)) {                                               <!-- 如果包含数字 -->
-    wrongInfo = wrongInfo.replace(/\d+/, (match) => {                       <!-- 替换数字为其他数字 -->
-      const num = parseInt(match);                                           <!-- 转换为数字 -->
-      return num + Math.floor(Math.random() * 10) + 1;                       <!-- 加上1-10的随机数 -->
-    });
-  } else if (wrongInfo.length > 2) {                                         <!-- 如果长度大于2 -->
-    wrongInfo = wrongInfo.slice(0, -1) + (wrongInfo[wrongInfo.length - 1] === '的' ? '地' : '的'); <!-- 替换"的"和"地" -->
-  } else {                                                                   <!-- 否则 -->
-    wrongInfo += "错误";                                                     <!-- 添加"错误"后缀 -->
-  }
-  distractors.push(wrongInfo);                                               <!-- 添加到干扰项数组 -->
-
-  // 干扰项3：反义词或对立概念
-  const antonyms = ["相反概念", "对立概念", "否定形式", "相反意义"]; <!-- 反义词数组 -->
-  distractors.push(antonyms[Math.floor(Math.random() * antonyms.length)]); <!-- 随机选择一个反义词 -->
-
-  return distractors;                                                        <!-- 返回干扰项数组 -->
-}
-
-// 生成判断题
-function generateTrueFalseQuestion(sentence, questionNum) {                    <!-- 生成判断题函数 -->
-  // 随机生成正确或错误的陈述
-  const isTrue = Math.random() > 0.3;                                          <!-- 70%概率为真 -->
-  let statement = sentence;                                                    <!-- 复制原句子 -->
-  
-  if (!isTrue) {                                                              <!-- 如果生成错误陈述 -->
-    // 生成错误陈述
-    let modified = false;                                                      <!-- 标记是否已修改 -->
     
-    // 尝试多种方式修改句子
-    if (statement.includes("是")) {                                            <!-- 如果包含"是" -->
-      statement = statement.replace("是", "不是");                            <!-- 替换为"不是" -->
-      modified = true;                                                         <!-- 标记已修改 -->
-    } else if (statement.includes("有")) {                                      <!-- 如果包含"有" -->
-      statement = statement.replace("有", "没有");                            <!-- 替换为"没有" -->
-      modified = true;                                                         <!-- 标记已修改 -->
-    } else if (statement.includes("可以")) {                                    <!-- 如果包含"可以" -->
-      statement = statement.replace("可以", "不可以");                          <!-- 替换为"不可以" -->
-      modified = true;                                                         <!-- 标记已修改 -->
-    } else if (statement.includes("必须")) {                                    <!-- 如果包含"必须" -->
-      statement = statement.replace("必须", "不必");                            <!-- 替��为"不必" -->
-      modified = true;                                                         <!-- 标记已修改 -->
-    } else if (statement.match(/\d+/)) {                                       <!-- 如果包含数字 -->
-      statement = statement.replace(/\d+/, (match) => {                       <!-- 替换数字 -->
-        const num = parseInt(match);                                           <!-- 转换为数字 -->
-        return num + Math.floor(Math.random() * 10) + 1;                       <!-- 加上1-10的随机数 -->
-      });
-      modified = true;                                                         <!-- 标记已修改 -->
-    } 
-    
-    // 如果无法修改，添加否定前缀
-    if (!modified) {                                                          <!-- 如果未修改 -->
-      statement = "以下描述错误：" + statement;                                <!-- 添加错误前缀 -->
-    }
-  }
-
-  return `                                                                     <!-- 返回判断题HTML -->
-    <div class=\"question\">
-      ${questionNum}. 「${statement}」是否正确？（√ / ×）
-      <div style=\"color: #666; font-size: 12px; margin-top: 4px;\">正确答案：${isTrue ? "√" : "×"}</div>
-    </div>
-  `;
-}
-
-// 生成问答题
-function generateShortAnswerQuestion(sentence, questionNum) {                   <!-- 生成问答题函数 -->
-  const keyInfo = extractKeyInfo(sentence);                                    <!-- 提取关键信息 -->
-  let question = "";                                                          <!-- 初始化问题 -->
-  
-  if (sentence.includes("为什么")) {                                          <!-- 如果原句包含"为什么" -->
-    question = "请解释为什么" + sentence.replace("为什么", "");                <!-- 生成解释类问题 -->
-  } else if (sentence.includes("是什么")) {                                    <!-- 如果原句包含"是什么" -->
-    question = sentence;                                                      <!-- 直接使用原句作为问题 -->
-  } else {                                                                   <!-- 否则 -->
-    question = `请简述「${keyInfo}」的相关内容`;                              <!-- 生成简述类问题 -->
-  }
-
-  return `                                                                     <!-- 返回问答题HTML -->
-    <div class=\"question\">
-      ${questionNum}. ${question}
-    </div>
-  `;
-}
-
-</script>                                                                     <!-- 结束JavaScript代码 -->
-</body>                                                                       <!-- 结束主体区域 -->
+    <!-- JavaScript 逻辑 -->
+    <script>
+        // 问题生成器类
+        class QuestionGenerator {
+            constructor() {
+                this.questions = {
+                    singleChoice: [],   // 单选题数组
+                    trueFalse: [],      // 判断题数组
+                    shortAnswer: []     // 简答题数组
+                };
+            }
+            
+            // 解析知识点文本 - 增强版，支持大量文字和英文输入
+            parseKnowledgePoints(text) {
+                try {
+                    // 去除多余空格和换行
+                    let cleanedText = text.replace(/\s+/g, ' ').trim();      // 清除多余空格和换行符
+                    
+                    // 如果没有输入，返回空数组
+                    if (!cleanedText) return [];                              // 如果没有输入内容，返回空数组
+                    
+                    // 支持中英文标点符号作为分隔符
+                    let points = cleanedText.split(/[。！？；.!?;]+/);        // 使用中英文标点符号分割知识点
+                    
+                    // 过滤空知识点并进一步处理
+                    points = points
+                        .map(point => point.trim())                          // 去除每个知识点的前后空格
+                        .filter(point => point.length > 0)                   // 过滤完全空的知识点
+                        .map(point => this.enhanceKnowledgePoint(point));    // 增强每个知识点
+                    
+                    // 额外处理列表格式（支持中英文标点和不同列表标记）
+                    const listPoints = cleanedText.match(/(?:^|\s)[-•○●◆►\d+\.]\s+([^。！？；.!?;]+)/g); // 匹配列表格式的知识点
+                    if (listPoints && Array.isArray(listPoints)) {           // 确保匹配结果是数组
+                        const extractedListPoints = listPoints
+                            .map(point => point.replace(/^\s*[-•○●◆►\d+\.]\s+/, '').trim()) // 去除列表标记
+                            .filter(point => point.length > 0)               // 过滤空知识点
+                            .map(point => this.enhanceKnowledgePoint(point));// 增强每个知识点
+                        points = [...points, ...extractedListPoints];        // 合并所有知识点
+                    }
+                    
+                    // 如果分割后没有得到有效知识点，直接使用原始文本
+                    if (points.length === 0) {
+                        points = [this.enhanceKnowledgePoint(cleanedText)];   // 使用原始文本作为单个知识点
+                    }
+                    
+                    // 去重
+                    const uniquePoints = [...new Set(points)];               // 去除重复的知识点
+                    
+                    return uniquePoints;                                      // 返回解析后的知识点数组
+                } catch (error) {
+                    console.error('解析知识点失败:', error);                 // 记录解析错误
+                    // 如果解析失败，直接将原始文本作为一个知识点返回
+                    return [this.enhanceKnowledgePoint(text)];               // 返回原始文本作为知识点
+                }
+            }
+            
+            // 增强知识点，提取核心概念 - 增强版，支持中英文和大量文字
+            enhanceKnowledgePoint(point) {
+                // 去除常见的引导词 - 支持中英文
+                const cleanedPoint = point
+                    .replace(/^(根据|基于|对于|关于|即|也就是|所谓的|According to|Based on|Regarding|About|That is|So-called)\s*/i, '') // 去除中英文引导词
+                    .trim();                                                  // 去除前后空格
+                
+                // 如果知识点过长，尝试提取核心部分
+                if (cleanedPoint.length > 100) {                              // 如果知识点超过100个字符
+                    // 提取包含核心概念的短句 - 支持中英文
+                    const coreMatch = cleanedPoint.match(                     // 匹配包含核心关键词的短句
+                        /([^，,，,]+核心[^，,，,]+|[^，,，,]+关键[^，,，,]+|[^，,，,]+本质[^，,，,]+|\bcore\b[^.,]+|\bkey\b[^.,]+|\bnature\b[^.,]+)/i
+                    );
+                    if (coreMatch) {                                          // 如果找到核心关键词
+                        return coreMatch[1];                                 // 返回核心概念
+                    }
+                    
+                    // 如果没有找到核心关键词，提取前100个字符作为核心概念
+                    return cleanedPoint.substring(0, 100) + '...';           // 提取前100个字符并添加省略号
+                }
+                
+                return cleanedPoint;                                          // 返回增强后的知识点
+            }
+            
+            // 生成单选题 - 高难度增强版
+            generateSingleChoiceQuestions(points) {
+                this.questions.singleChoice = points.slice(0, 5).map((point, index) => { // 最多生成5个单选题
+                    // 更具挑战性的问题类型
+                    const questionTypes = [ // 定义单选题的问题类型模板
+                        `在考虑了${this.generateTechnicalConstraint()}的情况下，关于"${point}"的以下表述中，哪一项最准确地反映了其本质特征？`,
+                        `以下关于"${point}"的描述中，哪一项同时考虑了${this.generateMultipleConstraints()}？`,
+                        `对于"${point}"的理解，以下哪项包含了其在${this.generateComplexScenario()}中的完整应用场景？`,
+                        `关于"${point}"的表述，哪一项正确区分了其与${this.generateRelatedConcepts()}的本质差异？`,
+                        `在${this.generateAdvancedPerspective()}视角下，"${point}"的核心价值体现在以下哪一项？`,
+                        `以下哪一项最准确地描述了"${point}"与${this.generateCrossDisciplinaryConcept()}的关系？`
+                    ];
+                    
+                    const question = questionTypes[Math.floor(Math.random() * questionTypes.length)]; // 随机选择一个问题类型
+                    const correctOption = point.trim();                                          // 正确选项是当前知识点
+                    const distractors = this.generateHighQualityDistractors(correctOption, 3);   // 生成3个高质量干扰项
+                    
+                    // 生成更具迷惑性的选项，包括正确选项的变体
+                    const options = [ // 创建选项数组
+                        { id: 'A', text: distractors[0] }, // 选项A
+                        { id: 'B', text: distractors[1] }, // 选项B
+                        { id: 'C', text: correctOption },  // 选项C（正确答案）
+                        { id: 'D', text: distractors[2] }  // 选项D
+                    ].sort(() => Math.random() - 0.5);   // 随机排序选项
+                    
+                    // 找到正确答案的新ID
+                    const correctAnswer = options.find(opt => opt.text === correctOption).id;   // 找到正确答案的选项ID
+                    
+                    return { // 返回单选题对象
+                        id: index + 1,                     // 问题编号
+                        question: question,                // 问题文本
+                        options: options,                  // 选项数组
+                        correctAnswer: correctAnswer,      // 正确答案
+                        difficulty: 'high',                // 难度等级
+                        category: 'single-choice'          // 题型
+                    };
+                });
+            }
+            
+            // 生成多个约束条件
+            generateMultipleConstraints() {
+                const constraints = [ // 定义约束条件数组
+                    '理论基础和实际应用',
+                    '短期效果和长期影响',
+                    '局部优化和全局平衡',
+                    '技术可行性和经济成本',
+                    '科学准确性和工程实用性'
+                ];
+                return constraints[Math.floor(Math.random() * constraints.length)]; // 随机返回一个约束条件
+            }
+            
+            // 生成复杂场景
+            generateComplexScenario() {
+                const scenarios = [ // 定义复杂场景数组
+                    '大规模分布式系统',
+                    '实时高并发环境',
+                    '资源极度受限的边缘设备',
+                    '跨学科交叉领域',
+                    '快速演化的新兴技术领域'
+                ];
+                return scenarios[Math.floor(Math.random() * scenarios.length)]; // 随机返回一个复杂场景
+            }
+            
+            // 生成相关概念集合
+            generateRelatedConcepts() {
+                const conceptSets = [ // 定义相关概念集合数组
+                    '传统模型和现代理论',
+                    '相似概念和对立思想',
+                    '基础原理和高级应用',
+                    '经典理论和前沿研究',
+                    '不同学科视角下的解释'
+                ];
+                return conceptSets[Math.floor(Math.random() * conceptSets.length)]; // 随机返回一个相关概念集合
+            }
+            
+            // 生成高级视角
+            generateAdvancedPerspective() {
+                const perspectives = [ // 定义高级视角数组
+                    '复杂性科学',
+                    '系统动力学',
+                    '信息论',
+                    '博弈论',
+                    '演化经济学'
+                ];
+                return perspectives[Math.floor(Math.random() * perspectives.length)]; // 随机返回一个高级视角
+            }
+            
+            // 生成高质量干扰项 - 增强版，更具迷惑性
+            generateHighQualityDistractors(original, count) {
+                const distractors = [];                          // 干扰项数组
+                const strategies = [                              // 干扰项生成策略数组
+                    this.generateAlmostCorrectDistractor,         // 几乎正确，只差一个关键细节
+                    this.generateContextuallyMisleadingDistractor, // 上下文误导
+                    this.generateEdgeCaseDistractor,             // 边缘情况
+                    this.generateOppositeConceptDistractor,      // 相反概念
+                    this.generateOvergeneralizationDistractor,   // 过度概括
+                    this.generateSimilarConceptDistractor,       // 相似概念混淆
+                    this.generateTechnicalJargonDistractor,      // 技术术语干扰
+                    this.generateContradictoryEvidenceDistractor // 矛盾证据干扰
+                ];
+                
+                // 确保生成足够的干扰项，即使需要重复策略
+                let attempts = 0;                                 // 尝试次数计数器
+                const maxAttempts = 100;                          // 最大尝试次数限制
+                
+                while (distractors.length < count && attempts < maxAttempts) { // 循环生成干扰项
+                    attempts++;                                   // 增加尝试次数
+                    const strategyIndex = Math.floor(Math.random() * strategies.length); // 随机选择一个策略
+                    const isRetry = attempts > strategies.length; // 如果尝试次数超过策略数量，标记为重试
+                    const distractor = strategies[strategyIndex](original, isRetry); // 生成干扰项
+                    if (distractor !== original && !distractors.includes(distractor)) { // 确保干扰项有效且不重复
+                        distractors.push(distractor);             // 添加到干扰项数组
+                    }
+                }
+                
+                // 如果仍然无法生成足够的干扰项，使用简单的干扰项生成作为最后手段
+                while (distractors.length < count) {              // 确保生成足够数量的干扰项
+                    const simpleDistractor = `${original}的错误变体${distractors.length + 1}`; // 生成简单干扰项
+                    if (!distractors.includes(simpleDistractor)) { // 确保干扰项不重复
+                        distractors.push(simpleDistractor);       // 添加到干扰项数组
+                    }
+                }
+                
+                return distractors;                               // 返回干扰项数组
+            }
+            
+            // 几乎正确的干扰项 - 只差一个关键细节
+            generateAlmostCorrectDistractor(original, isRetry = false) {
+                const criticalDetails = [ // 关键细节数组
+                    '量子纠缠效应', '非线性反馈机制', '边界条件变化', 
+                    '初始值敏感性', '混沌特性', '相对论效应',
+                    '热力学第二定律限制', '计算复杂度界限'
+                ];
+                const detail = criticalDetails[Math.floor(Math.random() * criticalDetails.length)]; // 随机选择一个关键细节
+                return `"${original}"是正确的，除了忽略了${detail}这一关键影响因素`; // 返回几乎正确的干扰项
+            }
+            
+            // 上下文误导的干扰项
+            generateContextuallyMisleadingDistractor(original, isRetry = false) {
+                const falseContexts = [ // 错误上下文数组
+                    '经典牛顿力学', '静态系统分析', '线性模型',
+                    '理想状态假设', '封闭系统理论'
+                ];
+                const context = falseContexts[Math.floor(Math.random() * falseContexts.length)]; // 随机选择一个错误上下文
+                return `在${context}框架下，"${original}"被广泛认为是正确的`; // 返回上下文误导的干扰项
+            }
+            
+            // 边缘情况的干扰项
+            generateEdgeCaseDistractor(original, isRetry = false) {
+                const edgeCases = [ // 边缘情况数组
+                    '接近光速的运动', '量子尺度', '绝对零度',
+                    '黑洞视界', '宇宙大爆炸初期', '极端压力条件'
+                ];
+                const case = edgeCases[Math.floor(Math.random() * edgeCases.length)]; // 随机选择一个边缘情况
+                return `在${case}条件下，"${original}"仍然完全适用`; // 返回边缘情况的干扰项
+            }
+            
+            // 相反概念的干扰项
+            generateOppositeConceptDistractor(original, isRetry = false) {
+                let oppositeTerm = original; // 初始化相反概念
+                if (original.includes('正')) oppositeTerm = original.replace('正', '负'); // 替换"正"为"负"
+                else if (original.includes('高')) oppositeTerm = original.replace('高', '低'); // 替换"高"为"低"
+                else if (original.includes('强')) oppositeTerm = original.replace('强', '弱'); // 替换"强"为"弱"
+                else if (original.includes('有')) oppositeTerm = original.replace('有', '无'); // 替换"有"为"无"
+                else oppositeTerm = `反${original}`; // 前缀"反"
+                
+                return `"${oppositeTerm}"与"${original}"在本质上是一致的`; // 返回相反概念的干扰项
+            }
+            
+            // 过度概括的干扰项
+            generateOvergeneralizationDistractor(original, isRetry = false) {
+                const broadCategories = [ // 广泛分类数组
+                    '物理系统', '生物现象', '社会规律',
+                    '数学模型', '工程应用', '自然法则'
+                ];
+                const category = broadCategories[Math.floor(Math.random() * broadCategories.length)]; // 随机选择一个广泛分类
+                return `"${original}"是适用于所有${category}的普适定律`; // 返回过度概括的干扰项
+            }
+            
+            // 相似概念混淆的干扰项
+            generateSimilarConceptDistractor(original, isRetry = false) {
+                const similarConcepts = [ // 相似概念数组
+                    '相关理论', '近似模型', '等价表述',
+                    '派生概念', '互补理论', '竞争假设'
+                ];
+                const concept = similarConcepts[Math.floor(Math.random() * similarConcepts.length)]; // 随机选择一个相似概念
+                return `"${original}"与${concept}在定义和应用上完全相同`; // 返回相似概念混淆的干扰项
+            }
+            
+            // 技术术语干扰的干扰项
+            generateTechnicalJargonDistractor(original, isRetry = false) {
+                const technicalJargons = [ // 技术术语数组
+                    '量子场论', '弦理论', '神经网络',
+                    '遗传算法', '混沌理论', '相对论'
+                ];
+                const jargon = technicalJargons[Math.floor(Math.random() * technicalJargons.length)]; // 随机选择一个技术术语
+                return `${jargon}的最新研究表明，"${original}"的核心假设是错误的`; // 返回技术术语干扰的干扰项
+            }
+            
+            // 矛盾证据干扰的干扰项
+            generateContradictoryEvidenceDistractor(original, isRetry = false) {
+                const evidenceTypes = [ // 证据类型数组
+                    '实验数据', '观测结果', '模拟实验',
+                    '数学推导', '专家共识', '理论预测'
+                ];
+                const evidence = evidenceTypes[Math.floor(Math.random() * evidenceTypes.length)]; // 随机选择一个证据类型
+                return `最新的${evidence}提供了确凿证据，证明"${original}"是错误的`; // 返回矛盾证据干扰的干扰项
+            }
+            
+            // 辅助生成函数
+            generateSpecificContext() {
+                const contexts = ['理想状态', '经典模型', '静态环境', '线性系统', '封闭体系']; // 特定上下文数组
+                return contexts[Math.floor(Math.random() * contexts.length)]; // 随机返回一个特定上下文
+            }
+            
+            generateLimitation() {
+                const limitations = ['非线性效应', '边界条件变化', '动态反馈机制', '量子效应', '混沌特性']; // 限制因素数组
+                return limitations[Math.floor(Math.random() * limitations.length)]; // 随机返回一个限制因素
+            }
+            
+            generateFalseContext() {
+                const contexts = ['过时的', '简化的', '理想化的', '被证伪的', '局部的']; // 错误上下文数组
+                return contexts[Math.floor(Math.random() * contexts.length)]; // 随机返回一个错误上下文
+            }
+            
+            generateContradiction() {
+                const contradictions = ['不成立的', '自相矛盾的', '与观察结果冲突的', '逻辑错误的', '数学上不可能的']; // 矛盾描述数组
+                return contradictions[Math.floor(Math.random() * contradictions.length)]; // 随机返回一个矛盾描述
+            }
+            
+            generateEdgeCase() {
+                const edgeCases = ['极端条件', '量子尺度', '相对论效应', '混沌状态', '临界相变点']; // 边缘情况数组
+                return edgeCases[Math.floor(Math.random() * edgeCases.length)]; // 随机返回一个边缘情况
+            }
+            
+            generateTechnicalReason() {
+                const reasons = ['违反能量守恒定律', '破坏因果关系', '超出计算复杂度界限', '违反对称性原则', '导致无限解']; // 技术原因数组
+                return reasons[Math.floor(Math.random() * reasons.length)]; // 随机返回一个技术原因
+            }
+            
+            generateOppositeTerm(original) {
+                // 简单的反义词生成，实际应用中可以更复杂
+                return original.includes('正') ? original.replace('正', '负') : 
+                       original.includes('高') ? original.replace('高', '低') : 
+                       original.includes('强') ? original.replace('强', '弱') : 
+                       original.includes('有') ? original.replace('有', '无') : 
+                       `反${original}`; // 返回原始术语的反义词
+            }
+            
+            generateOppositeAttribute() {
+                const attributes = ['完全不同', '性质相反', '作用对立', '方向相反', '效果相反']; // 相反属性数组
+                return attributes[Math.floor(Math.random() * attributes.length)]; // 随机返回一个相反属性
+            }
+            
+            generateBroadCategory() {
+                const categories = ['系统', '模型', '现象', '过程', '结构']; // 广泛分类数组
+                return categories[Math.floor(Math.random() * categories.length)]; // 随机返回一个广泛分类
+            }
+            
+            generateVariableConditions() {
+                const conditions = ['初始条件', '边界约束', '环境参数', '时间尺度', '空间维度']; // 可变条件数组
+                return conditions[Math.floor(Math.random() * conditions.length)]; // 随机返回一个可变条件
+            }
+            
+            // 生成判断题 - 高难度增强版
+            generateTrueFalseQuestions(points) {
+                this.questions.trueFalse = points.slice(0, 4).map((point, index) => { // 最多生成4个判断题
+                    const isTrue = Math.random() > 0.5; // 随机决定题目是正确还是错误
+                    let questionText; // 题目文本
+                    
+                    if (isTrue) {
+                        // 生成包含技术细节和复杂条件的正确陈述
+                        const trueStrategies = [ // 正确陈述生成策略
+                            this.generatePreciseTrueStatementWithConstraints,
+                            this.generateContextualTrueStatementWithNuance,
+                            this.generateComparativeTrueStatementWithCaveats
+                        ];
+                        const strategy = trueStrategies[Math.floor(Math.random() * trueStrategies.length)]; // 随机选择一个策略
+                        questionText = strategy(point); // 生成正确陈述
+                    } else {
+                        // 生成极具迷惑性的错误陈述，增加干扰性
+                        const falseStrategies = [ // 错误陈述生成策略
+                            this.generateAlmostTrueStatementWithTwist,
+                            this.generateContextuallyFalseStatementWithPlausibility,
+                            this.generateEdgeCaseFalseStatementWithTechnicalJargon,
+                            this.generateMisleadingComparativeStatementWithSimilarities,
+                            this.generateOvergeneralizationStatementWithApparentTruth
+                        ];
+                        const strategy = falseStrategies[Math.floor(Math.random() * falseStrategies.length)]; // 随机选择一个策略
+                        questionText = strategy(point); // 生成错误陈述
+                    }
+                    
+                    return { // 返回判断题对象
+                        id: index + 1,                     // 问题编号
+                        question: questionText,            // 问题文本
+                        correctAnswer: isTrue ? '正确' : '错误', // 正确答案
+                        difficulty: 'high',                // 难度等级
+                        category: 'true-false'             // 题型
+                    };
+                });
+            }
+            
+            // 带有约束条件的精确正确陈述
+            generatePreciseTrueStatementWithConstraints(original) {
+                return `考虑到${this.generateTechnicalConstraint()}和${this.generateAnotherConstraint()}，"${original}"在${this.generateValidScope()}内是完全准确的。`; // 生成带有技术约束的精确正确陈述
+            }
+            
+            // 带有细微差别的上下文正确陈述
+            generateContextualTrueStatementWithNuance(original) {
+                return `基于${this.generateValidTheory()}的最新研究，"${original}"在${this.generateSpecificDomain()}中正确描述了${this.generateCoreFeature()}，尽管在其他领域存在争议。`; // 生成带有细微差别的上下文正确陈述
+            }
+            
+            // 带有警告的比较性正确陈述
+            generateComparativeTrueStatementWithCaveats(original) {
+                return `与${this.generateRelatedConcept()}相比，"${original}"更准确地反映了${this.generateFundamentalPrinciple()}，前提是${this.generateNecessaryCondition()}。`; // 生成带有警告的比较性正确陈述
+            }
+            
+            // 带有转折的几乎正确陈述
+            generateAlmostTrueStatementWithTwist(original) {
+                return `"${original}"在大多数情况下是正确的，但最新研究表明${this.generateContradictoryFinding()}，这彻底改变了我们对其适用性的理解。`; // 生成带有转折的几乎正确陈述
+            }
+            
+            // 具有合理性的上下文错误陈述
+            generateContextuallyFalseStatementWithPlausibility(original) {
+                return `在${this.generatePlausibleButFalseContext()}框架下，"${original}"被广泛接受，尽管${this.generateGroundbreakingEvidence()}证明它是错误的。`; // 生成具有合理性的上下文错误陈述
+            }
+            
+            // 带有技术术语的边缘情况错误陈述
+            generateEdgeCaseFalseStatementWithTechnicalJargon(original) {
+                return `即使在${this.generateExtremeCondition()}下，"${original}"仍然有效，因为${this.generateApparentTechnicalJustification()}。`; // 生成带有技术术语的边缘情况错误陈述
+            }
+            
+            // 带有相似性的误导性比较陈述
+            generateMisleadingComparativeStatementWithSimilarities(original) {
+                return `与${this.generateSimilarButDifferentConcept()}相比，"${original}"共享${this.generateCommonFeatures()}，因此它们在本质上是相同的。`; // 生成带有相似性的误导性比较陈述
+            }
+            
+            // 带有表面真实性的过度概括陈述
+            generateOvergeneralizationStatementWithApparentTruth(original) {
+                return `"${original}"适用于所有${this.generateBroadCategory()}，因为${this.generateApparentUniversalPrinciple()}。`; // 生成带有表面真实性的过度概括陈述
+            }
+            
+            // 精确的正确陈述
+            generatePreciseTrueStatement(original) {
+                return `考虑到${this.generateTechnicalConstraint()}，"${original}"在${this.generateValidScope()}内是完全准确的。`; // 生成精确的正确陈述
+            }
+            
+            // 上下文相关的正确陈述
+            generateContextualTrueStatement(original) {
+                return `基于${this.generateValidTheory()}，"${original}"正确描述了${this.generateApplicationArea()}的核心特征。`; // 生成上下文相关的正确陈述
+            }
+            
+            // 比较性的正确陈述
+            generateComparativeTrueStatement(original) {
+                return `与${this.generateRelatedConcept()}相比，"${original}"更准确地反映了${this.generateFundamentalPrinciple()}。`; // 生成比较性的正确陈述
+            }
+            
+            // 几乎正确的错误陈述
+            generateAlmostTrueStatement(original) {
+                return `除了忽略了${this.generateCriticalDetail()}外，"${original}"在所有情况下都成立。`; // 生成几乎正确的错误陈述
+            }
+            
+            // 上下文错误的陈述
+            generateContextuallyFalseStatement(original) {
+                return `在${this.generateInvalidContext()}下，"${original}"依然适用，因为它不受${this.generateFalseConstraint()}的影响。`; // 生成上下文错误的陈述
+            }
+            
+            // 边缘情况的错误陈述
+            generateEdgeCaseFalseStatement(original) {
+                return `即使在${this.generateExtremeCondition()}下，"${original}"仍然有效，因为${this.generateFalseJustification()}。`; // 生成边缘情况的错误陈述
+            }
+            
+            // 误导性比较的错误陈述
+            generateMisleadingComparativeStatement(original) {
+                return `与${this.generateOppositeConcept(original)}相比，"${original}"在${this.generateBroadDomain()}中具有更广泛的适用性。`; // 生成误导性比较的错误陈述
+            }
+            
+            // 判断题辅助生成函数
+            generateTechnicalConstraint() {
+                const constraints = ['量子力学的不确定性原理', '热力学第二定律', '相对论效应', '混沌理论的初始条件敏感性', '计算复杂性理论的限制']; // 技术约束数组
+                return constraints[Math.floor(Math.random() * constraints.length)]; // 随机返回一个技术约束
+            }
+            
+            generateValidScope() {
+                const scopes = ['经典物理体系', '线性控制系统', '封闭热力学系统', '有限状态机模型', '平衡态热力学'];
+                return scopes[Math.floor(Math.random() * scopes.length)];
+            }
+            
+            generateValidTheory() {
+                const theories = ['爱因斯坦的相对论', '量子场论', '信息论', '系统动力学', '博弈论'];
+                return theories[Math.floor(Math.random() * theories.length)];
+            }
+            
+            generateApplicationArea() {
+                const areas = ['现代通信技术', '药物研发', '天体物理学', '人工智能', '金融工程'];
+                return areas[Math.floor(Math.random() * areas.length)];
+            }
+            
+            generateRelatedConcept() {
+                const concepts = ['传统牛顿力学', '经典信息论', '静态系统分析', '线性回归模型', '古典经济学'];
+                return concepts[Math.floor(Math.random() * concepts.length)];
+            }
+            
+            generateFundamentalPrinciple() {
+                const principles = ['自然规律的普适性', '信息传递的本质', '系统演化的方向', '能量转换的效率', '决策过程的理性'];
+                return principles[Math.floor(Math.random() * principles.length)];
+            }
+            
+            generateCriticalDetail() {
+                const details = ['量子纠缠效应', '非平衡态热力学过程', '非线性反馈机制', '高维空间的几何特性', '随机过程的遍历性']; // 关键细节数组
+                return details[Math.floor(Math.random() * details.length)]; // 随机返回一个关键细节
+            }
+            
+            generateInvalidContext() {
+                const contexts = ['量子尺度', '超高速运动', '极端温度条件', '黑洞视界附近', '奇点']; // 无效上下文数组
+                return contexts[Math.floor(Math.random() * contexts.length)]; // 随机返回一个无效上下文
+            }
+            
+            generateFalseConstraint() {
+                const constraints = ['时空曲率', '量子隧穿效应', '熵增原理', '测不准原理', '哥德尔不完备性定理']; // 错误约束数组
+                return constraints[Math.floor(Math.random() * constraints.length)]; // 随机返回一个错误约束
+            }
+            
+            generateExtremeCondition() {
+                const conditions = ['绝对零度', '无限接近光速', '普朗克尺度', '宇宙大爆炸初期', '黑洞内部']; // 极端条件数组
+                return conditions[Math.floor(Math.random() * conditions.length)]; // 随机返回一个极端条件
+            }
+            
+            generateFalseJustification() {
+                const justifications = ['它是一个数学恒等式', '它遵循能量守恒定律', '它不受量子涨落的影响', '它满足所有对称性要求', '它在所有参考系中都保持不变']; // 错误理由数组
+                return justifications[Math.floor(Math.random() * justifications.length)]; // 随机返回一个错误理由
+            }
+            
+            generateBroadDomain() {
+                const domains = ['所有物理系统', '复杂自适应系统', '生物进化过程', '人类认知领域', '社会经济系统']; // 广泛领域数组
+                return domains[Math.floor(Math.random() * domains.length)]; // 随机返回一个广泛领域
+            }
+            
+            // 增强版辅助生成函数 - 用于高难度问题
+            generateAnotherConstraint() {
+                const constraints = ['非线性效应', '量子涨落', '混沌理论', '热力学第二定律', '相对论效应']; // 额外约束条件数组
+                return constraints[Math.floor(Math.random() * constraints.length)]; // 随机返回一个额外约束条件
+            }
+            
+            generateSpecificDomain() {
+                const domains = ['计算物理学', '生物信息学', '量子计算', '复杂系统科学', '人工智能伦理学']; // 特定领域数组
+                return domains[Math.floor(Math.random() * domains.length)]; // 随机返回一个特定领域
+            }
+            
+            generateCoreFeature() {
+                const features = ['基本原理', '数学表达', '物理机制', '应用潜力', '理论价值']; // 核心特征数组
+                return features[Math.floor(Math.random() * features.length)]; // 随机返回一个核心特征
+            }
+            
+            generateNecessaryCondition() {
+                const conditions = ['初始条件已知', '系统处于平衡态', '忽略量子效应', '时间尺度足够大', '空间维度有限'];
+                return conditions[Math.floor(Math.random() * conditions.length)];
+            }
+            
+            generateContradictoryFinding() {
+                const findings = ['存在量子纠缠效应', '非线性反馈机制起主导作用', '边界条件敏感依赖', '混沌特性不可预测', '相对论效应不可忽略'];
+                return findings[Math.floor(Math.random() * findings.length)];
+            }
+            
+            generatePlausibleButFalseContext() {
+                const contexts = ['经典力学', '静态系统', '线性模型', '理想气体假设', '封闭系统'];
+                return contexts[Math.floor(Math.random() * contexts.length)];
+            }
+            
+            generateGroundbreakingEvidence() {
+                const evidence = ['粒子对撞机实验', '量子计算模拟', '深空观测数据', '基因测序结果', '神经网络模拟'];
+                return evidence[Math.floor(Math.random() * evidence.length)];
+            }
+            
+            generateSimilarButDifferentConcept() {
+                const concepts = ['经典牛顿力学', '静态系统分析', '线性回归模型', '热力学第一定律', '狭义相对论']; // 相似但不同的概念数组
+                return concepts[Math.floor(Math.random() * concepts.length)]; // 随机返回一个相似但不同的概念
+            }
+            
+            generateCommonFeatures() {
+                const features = ['数学形式', '应用场景', '理论基础', '实验验证', '预测能力']; // 共同特征数组
+                return features[Math.floor(Math.random() * features.length)]; // 随机返回一个共同特征
+            }
+            
+            generateApparentUniversalPrinciple() {
+                const principles = ['能量守恒定律', '热力学第二定律', '因果关系', '对称性原理', '最小作用量原理']; // 表面普适原理数组
+                return principles[Math.floor(Math.random() * principles.length)]; // 随机返回一个表面普适原理
+            }
+            
+            generateApparentTechnicalJustification() {
+                const justifications = ['能量守恒', '对称性破缺', '量子纠缠', '混沌同步', '自组织临界性']; // 表面技术理由数组
+                return justifications[Math.floor(Math.random() * justifications.length)]; // 随机返回一个表面技术理由
+            }
+            
+            // 生成简答题 - 高难度增强版
+            generateShortAnswerQuestions(points) {
+                this.questions.shortAnswer = points.slice(0, 3).map((point, index) => { // 最多生成3个简答题
+                    // 更具挑战性的问题类型
+                    const questionTypes = [ // 定义简答题的问题类型模板
+                        // 高级分析性问题
+                        `在考虑${this.generateMultipleTechnicalConstraints()}的情况下，请从${this.generateMultipleAnalysisDimensions()}维度深入分析"${point}"的核心局限性，并探讨如何在${this.generateComplexScenario()}中设计创新解决方案来克服这些限制。`,
+                        
+                        // 深度比较性问题
+                        `详细比较"${point}"与${this.generateMultipleRelatedConcepts()}的本质差异，包括它们在${this.generateEmergingDomain()}中的适用性、局限性以及在${this.generateFutureTechnology()}中的潜在应用前景。`,
+                        
+                        // 复杂应用扩展性问题
+                        `基于"${point}"的核心原理，设计一个适用于${this.generateHighStakesScenario()}的完整解决方案，包括${this.generateImplementationConsiderations()}，并分析其在${this.generateEthicalAndTechnicalChallenges()}方面的权衡。`,
+                        
+                        // 高级批判性问题
+                        `从${this.generateMultiplePerspectives()}视角评估"${point}"在${this.generateEmergingField()}中的有效性，考虑${this.generateConflictingEvidence()}，并提出你对其未来发展方向的预测和建议。`,
+                        
+                        // 跨学科综合创新性问题
+                        `结合${this.generateMultipleCrossDisciplinaryConcepts()}和"${point}"的核心思想，提出一个创新性的跨领域框架来解决${this.generateGrandChallengeProblem()}，并详细讨论其实施的关键步骤、潜在障碍和预期影响。`,
+                        
+                        // 深入解释性问题 - 增强版
+                        `请详细解释"${point}"的理论基础、数学表达（如果适用）、实验验证过程以及它如何从${this.generateFundamentalPrinciple()}推导而来，并结合${this.generateRecentResearchFindings()}举例说明其在${this.generateCuttingEdgeApplication()}中的最新应用和未来发展趋势。`
+                    ];
+                    
+                    const question = questionTypes[Math.floor(Math.random() * questionTypes.length)]; // 随机选择一个问题类型
+                    
+                    return { // 返回简答题对象
+                        id: index + 1,                     // 问题编号
+                        question: question,                // 问题文本
+                        difficulty: 'high',                // 难度等级
+                        category: 'short-answer'           // 题型
+                    };
+                });
+            }
+            
+            // 简答题辅助生成函数 - 增强版
+            generateMultipleTechnicalConstraints() {
+                const constraints = [ // 多重技术约束数组
+                    '量子力学和相对论的双重约束',
+                    '非线性效应和混沌理论的影响',
+                    '热力学第二定律和熵增原理',
+                    '计算复杂性和算法局限性',
+                    '量子涨落和测量误差'
+                ];
+                return constraints[Math.floor(Math.random() * constraints.length)]; // 随机返回一个多重技术约束
+            }
+            
+            generateMultipleAnalysisDimensions() {
+                const dimensions = [ // 多重分析维度数组
+                    '理论基础、实际应用和伦理影响',
+                    '计算复杂度、可扩展性和鲁棒性',
+                    '准确性、效率和可解释性',
+                    '短期效果、长期影响和社会价值',
+                    '科学性、实用性和创新性'
+                ];
+                return dimensions[Math.floor(Math.random() * dimensions.length)]; // 随机返回一个多重分析维度
+            }
+            
+            generateEmergingDomain() {
+                const domains = [ // 新兴领域数组
+                    '量子计算和量子信息',
+                    '人工智能和机器学习',
+                    '合成生物学和基因编辑',
+                    '可持续能源和气候变化',
+                    '脑机接口和神经技术'
+                ];
+                return domains[Math.floor(Math.random() * domains.length)]; // 随机返回一个新兴领域
+            }
+            
+            generateFutureTechnology() {
+                const technologies = [ // 未来技术数组
+                    '下一代人工智能',
+                    '量子计算机',
+                    '通用人工智能',
+                    '可解释AI',
+                    '自主系统'
+                ];
+                return technologies[Math.floor(Math.random() * technologies.length)]; // 随机返回一个未来技术
+            }
+            
+            generateHighStakesScenario() {
+                const scenarios = [ // 高风险场景数组
+                    '大规模自然灾难应对',
+                    '全球公共卫生危机',
+                    '网络安全威胁防御',
+                    '深空探测任务',
+                    '关键基础设施保护'
+                ];
+                return scenarios[Math.floor(Math.random() * scenarios.length)]; // 随机返回一个高风险场景
+            }
+            
+            generateImplementationConsiderations() {
+                const considerations = [ // 实施考虑因素数组
+                    '技术可行性、经济成本和时间限制',
+                    '系统架构、算法设计和硬件需求',
+                    '团队组建、资源分配和风险管理',
+                    '测试验证、部署策略和维护计划',
+                    '用户体验、培训需求和 adoption strategies'
+                ];
+                return considerations[Math.floor(Math.random() * considerations.length)]; // 随机返回一个实施考虑因素
+            }
+            
+            generateEthicalAndTechnicalChallenges() {
+                const challenges = [ // 伦理和技术挑战数组
+                    '隐私保护、数据安全和伦理规范',
+                    '算法偏见、公平性和透明度',
+                    '系统可靠性、安全性和鲁棒性',
+                    '技术扩散、社会影响和政策法规',
+                    '长期影响、环境可持续性和道德责任'
+                ];
+                return challenges[Math.floor(Math.random() * challenges.length)]; // 随机返回一个伦理和技术挑战
+            }
+            
+            generateMultiplePerspectives() {
+                const perspectives = [ // 多角度视角数组
+                    '科学、技术和社会',
+                    '理论、实践和伦理',
+                    '短期、中期和长期',
+                    '微观、中观和宏观',
+                    '学术、工业和政府'
+                ];
+                return perspectives[Math.floor(Math.random() * perspectives.length)]; // 随机返回一个多角度视角
+            }
+            
+            generateConflictingEvidence() {
+                const evidences = [ // 矛盾证据数组
+                    '近期实验结果与传统理论预测的冲突',
+                    '不同研究团队的矛盾发现',
+                    '理论模型与实际观测的差异',
+                    '实验室结果与真实世界应用的差距',
+                    '定量分析与定性研究的对立结论'
+                ];
+                return evidences[Math.floor(Math.random() * evidences.length)]; // 随机返回一个矛盾证据
+            }
+            
+            generateMultipleCrossDisciplinaryConcepts() {
+                const concepts = [ // 跨学科概念数组
+                    '复杂性科学、信息论和系统动力学',
+                    '量子力学、计算机科学和认知科学',
+                    '博弈论、经济学和社会学',
+                    '生物学、物理学和工程学',
+                    '心理学、神经科学和人工智能'
+                ];
+                return concepts[Math.floor(Math.random() * concepts.length)]; // 随机返回一个跨学科概念组合
+            }
+            
+            generateGrandChallengeProblem() {
+                const problems = [ // 重大挑战问题数组
+                    '气候变化和可持续发展',
+                    '全球健康和疾病防治',
+                    '人工智能的安全和伦理',
+                    '能源危机和可再生能源',
+                    '太空探索和殖民'
+                ];
+                return problems[Math.floor(Math.random() * problems.length)]; // 随机返回一个重大挑战问题
+            }
+            
+            generateMultipleRelatedConcepts() {
+                const concepts = [ // 多重相关概念数组
+                    '传统模型、现代理论和前沿研究',
+                    '相似概念、对立思想和互补理论',
+                    '基础原理、衍生概念和应用技术',
+                    '经典理论、量子理论和相对论',
+                    '确定性模型、概率模型和混沌理论'
+                ];
+                return concepts[Math.floor(Math.random() * concepts.length)]; // 随机返回一个多重相关概念组合
+            }
+            
+            generateRecentResearchFindings() {
+                const findings = [ // 近期研究发现数组
+                    '2023年诺贝尔物理学奖相关研究',
+                    '最新Nature/Science发表的突破成果',
+                    '顶级学术会议的前沿报告',
+                    '行业领先企业的技术白皮书',
+                    '国际权威机构的研究报告'
+                ];
+                return findings[Math.floor(Math.random() * findings.length)]; // 随机返回一个近期研究发现
+            }
+            
+            // 简答题辅助生成函数
+            generateAnalysisDimension() {
+                const dimensions = ['理论基础', '计算复杂度', '实际应用', '可扩展性', '鲁棒性', '伦理影响']; // 分析维度数组
+                return dimensions[Math.floor(Math.random() * dimensions.length)]; // 随机返回一个分析维度
+            }
+            
+            generateSpecificScenario() {
+                const scenarios = ['大规模分布式系统', '实时数据分析平台', '资源受限环境', '高安全性要求场景', '跨学科研究项目']; // 特定场景数组
+                return scenarios[Math.floor(Math.random() * scenarios.length)]; // 随机返回一个特定场景
+            }
+            
+            generateApplicationDomain() {
+                const domains = ['人工智能', '量子计算', '生物信息学', '金融工程', '气候变化建模']; // 应用领域数组
+                return domains[Math.floor(Math.random() * domains.length)]; // 随机返回一个应用领域
+            }
+            
+            generateChallengingScenario() {
+                const scenarios = ['极端条件下的环境监测', '高维数据的实时处理', '复杂系统的预测建模', '跨文化交流中的信息传递', '有限资源下的优化分配']; // 挑战性场景数组
+                return scenarios[Math.floor(Math.random() * scenarios.length)]; // 随机返回一个挑战性场景
+            }
+            
+            generateTechnicalConsiderations() {
+                const considerations = ['计算效率', '内存占用', '精度损失', '可解释性', '可维护性', '兼容性']; // 技术考虑因素数组
+                return considerations[Math.floor(Math.random() * considerations.length)]; // 随机返回一个技术考虑因素
+            }
+            
+            generateEmergingField() {
+                const fields = ['量子机器学习', '神经接口技术', '合成生物学', '元宇宙技术', '可持续能源系统']; // 新兴领域数组
+                return fields[Math.floor(Math.random() * fields.length)]; // 随机返回一个新兴领域
+            }
+            
+            generateAdvancedPerspective() {
+                const perspectives = ['复杂性科学视角', '信息论视角', '热力学视角', '系统动力学视角', '认知科学视角']; // 高级视角数组
+                return perspectives[Math.floor(Math.random() * perspectives.length)]; // 随机返回一个高级视角
+            }
+            
+            generateCrossDisciplinaryConcept() {
+                const concepts = ['复杂自适应系统', '信息论熵', '自组织临界性', '贝叶斯网络', '博弈论均衡'];
+                return concepts[Math.floor(Math.random() * concepts.length)];
+            }
+            
+            generateComplexProblem() {
+                const problems = ['多Agent系统的协调优化', '开放系统的稳定性分析', '非线性动力学的预测控制', '复杂网络的鲁棒性设计', '高不确定性环境下的决策制定'];
+                return problems[Math.floor(Math.random() * problems.length)];
+            }
+            
+            generateCuttingEdgeApplication() {
+                const applications = ['自动驾驶技术', '个性化医疗', '量子通信', '智能电网', '脑机接口']; // 前沿应用数组
+                return applications[Math.floor(Math.random() * applications.length)]; // 随机返回一个前沿应用
+            }
+            
+            // 生成所有问题 - 智能接入大语言模型
+            // 生成所有问题 - 异步版本，支持await
+            async generateQuestions(text) {
+                try {
+                    const points = this.parseKnowledgePoints(text); // 解析知识点
+                    if (points.length === 0) { // 如果没有找到有效的知识点
+                        console.error('没有找到有效的知识点'); // 输出错误信息
+                        return false; // 返回失败
+                    }
+                    
+                    // 初始化问题对象，确保三种题型都存在
+                    this.questions = {
+                        singleChoice: [],   // 单选题数组
+                        trueFalse: [],      // 判断题数组
+                        shortAnswer: []     // 简答题数组
+                    };
+                    
+                    // 首先使用本地生成器生成所有题型，确保快速响应
+                    this.generateSingleChoiceQuestions(points); // 生成单选题
+                    this.generateTrueFalseQuestions(points);    // 生成判断题
+                    this.generateShortAnswerQuestions(points);  // 生成简答题
+                    
+                    // 渲染问题
+                    this.renderQuestions(); // 渲染所有问题
+                    return true; // 返回成功
+                } catch (error) {
+                    console.error('生成问题失败:', error); // 输出错误信息
+                    // 如果发生错误，尝试使用最小化的本地生成器生成题目
+                    try {
+                        // 重置问题对象
+                        this.questions = {
+                            singleChoice: [],   // 单选题数组
+                            trueFalse: [],      // 判断题数组
+                            shortAnswer: []     // 简答题数组
+                        };
+                        
+                        // 使用简化的知识点生成题目
+                        const simplePoints = text.split(/\n/).filter(line => line.trim().length > 0).slice(0, 5); // 按行分割并过滤
+                        
+                        // 生成至少一个单选题
+                        if (simplePoints.length > 0) {
+                            this.generateSingleChoiceQuestions([simplePoints[0]]); // 使用第一个有效行生成单选题
+                        }
+                        
+                        // 生成至少一个判断题
+                        if (simplePoints.length > 0) {
+                            this.generateTrueFalseQuestions([simplePoints[0]]); // 使用第一个有效行生成判断题
+                        }
+                        
+                        // 生成至少一个简答题
+                        if (simplePoints.length > 0) {
+                            this.generateShortAnswerQuestions([simplePoints[0]]); // 使用第一个有效行生成简答题
+                        }
+                        
+                        // 渲染问题
+                        this.renderQuestions(); // 渲染所有问题
+                        return true; // 返回成功
+                    } catch (secondError) {
+                        console.error('简化生成也失败:', secondError); // 输出错误信息
+                        return false; // 返回失败
+                    }
+                }
+            }
+            
+            // 调用大语言模型API
+            async callLLMAPI(text) {
+                // 调用字节跳动/火山引擎最新大语言模型API
+                // 支持的模型：火山方舟、豆包、Doubao Pro等最新模型
+                try {
+                    // 真实API调用示例 - 字节跳动/火山引擎
+                    const response = await fetch('https://ark.cn-beijing.volces.com/api/v3/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer YOUR_API_KEY', // 替换为真实API密钥
+                            'X-Volc-Region': 'cn-beijing'
+                        },
+                        body: JSON.stringify({
+                            model: 'doubao-pro-4k', // 使用字节跳动最新模型
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: '你是一个专业的教育评估专家，擅长生成高质量、高难度的测试题目。请根据用户提供的知识点内容，生成能有效测试知识掌握程度的测试题，包括单选题、判断题和简答题。题目必须紧密围绕知识点，能测试学生对知识点的理解、应用和分析能力。'
+                                },
+                                {
+                                    role: 'user',
+                                    content: `请基于以下知识点内容生成能有效测试知识掌握程度的高质量测试题：\n\n${text}\n\n要求：\n1. 题型包括：单选题、判断题、简答题\n2. 难度：中高难度到高难度\n3. 单选题：测试对知识点细节的理解，选项要有高度迷惑性\n4. 判断题：测试对知识点准确性的掌握，包含复杂条件\n5. 简答题：测试对知识点的深入理解和应用能力\n6. 所有题目必须紧密基于提供的知识点内容\n7. 题目要能区分不同掌握程度的学生\n8. 输出格式：JSON格式，包含questions对象，下分singleChoice、trueFalse、shortAnswer数组`
+                                }
+                            ],
+                            temperature: 0.7, // 控制生成的随机性
+                            max_tokens: 2000, // 控制生成的文本长度
+                            top_p: 0.9, // 控制生成的多样性
+                            frequency_penalty: 0.5, // 降低重复内容
+                            presence_penalty: 0.3 // 鼓励新内容
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // 解析API响应
+                    if (data.choices && data.choices.length > 0) {
+                        const content = data.choices[0].message.content;
+                        // 尝试解析JSON格式的响应
+                        try {
+                            const questionsData = JSON.parse(content);
+                            return {
+                                success: true,
+                                questions: questionsData.questions
+                            };
+                        } catch (parseError) {
+                            console.error('API响应JSON解析失败:', parseError);
+                            return { success: false, message: 'API响应格式错误' };
+                        }
+                    }
+                    
+                    return { success: false, message: 'API调用成功但未返回有效数据' };
+                } catch (error) {
+                    console.error('字节跳动/火山引擎API调用失败，使用本地生成器:', error);
+                    return { success: false, error: error.message };
+                }
+            }
+            
+            // 渲染问题到页面
+            renderQuestions() {
+                this.renderSingleChoiceQuestions();
+                this.renderTrueFalseQuestions();
+                this.renderShortAnswerQuestions();
+            }
+            
+            // 渲染单选题
+            renderSingleChoiceQuestions() {
+                const container = document.getElementById('single-choice-questions');
+                container.innerHTML = '';
+                
+                this.questions.singleChoice.forEach(question => {
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question-item';
+                    questionElement.innerHTML = `
+                        <div class="question-header">
+                            <span class="question-number">${question.id}.</span>
+                            <span class="question-text">${question.question}</span>
+                        </div>
+                        <div class="options-list">
+                            ${question.options.map(option => `
+                                <label class="option-item">
+                                    <input type="radio" name="question-${question.id}" value="${option.id}">
+                                    <span class="option-label">${option.id}</span>
+                                    <span class="option-text">${option.text}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                        <div class="question-footer">
+                            <span class="correct-answer">正确答案：${question.correctAnswer}</span>
+                        </div>
+                    `;
+                    container.appendChild(questionElement);
+                });
+            }
+            
+            // 渲染判断题
+            renderTrueFalseQuestions() {
+                const container = document.getElementById('true-false-questions');
+                container.innerHTML = '';
+                
+                this.questions.trueFalse.forEach(question => {
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question-item';
+                    questionElement.innerHTML = `
+                        <div class="question-header">
+                            <span class="question-number">${question.id}.</span>
+                            <span class="question-text">${question.question}</span>
+                        </div>
+                        <div class="options-list true-false-options">
+                            <label class="option-item">
+                                <input type="radio" name="tf-question-${question.id}" value="正确">
+                                <span class="option-label">正确</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="radio" name="tf-question-${question.id}" value="错误">
+                                <span class="option-label">错误</span>
+                            </label>
+                        </div>
+                        <div class="question-footer">
+                            <span class="correct-answer">正确答案：${question.correctAnswer}</span>
+                        </div>
+                    `;
+                    container.appendChild(questionElement);
+                });
+            }
+            
+            // 渲染简答题
+            renderShortAnswerQuestions() {
+                const container = document.getElementById('short-answer-questions');
+                container.innerHTML = '';
+                
+                this.questions.shortAnswer.forEach(question => {
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question-item';
+                    questionElement.innerHTML = `
+                        <div class="question-header">
+                            <span class="question-number">${question.id}.</span>
+                            <span class="question-text">${question.question}</span>
+                        </div>
+                        <div class="answer-input">
+                            <textarea placeholder="请在此输入答案..." rows="3"></textarea>
+                        </div>
+                    `;
+                    container.appendChild(questionElement);
+                });
+            }
+        }
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            const generator = new QuestionGenerator();
+            const generateBtn = document.querySelector('.generate-btn');
+            const textInput = document.querySelector('.text-input');
+            let debounceTimer = null;
+            
+            // 自动生成题目函数 - 带防抖
+            const autoGenerateQuestions = () => {
+                const knowledgeText = textInput.value.trim();
+                if (knowledgeText.length < 10) return; // 至少输入10个字符才自动生成
+                
+                // 禁用按钮，防止重复点击
+                generateBtn.disabled = true;
+                generateBtn.textContent = '生成中...';
+                
+                generator.generateQuestions(knowledgeText)
+                    .then(success => {
+                        if (success) {
+                            // 滚动到问题区域
+                            document.querySelector('.questions-section').scrollIntoView({ behavior: 'smooth' });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('生成问题失败:', error);
+                    })
+                    .finally(() => {
+                        // 恢复按钮状态
+                        generateBtn.disabled = false;
+                        generateBtn.textContent = '生成问题';
+                    });
+            };
+            
+            // 文本框内容变化事件 - 自动生成题目
+            textInput.addEventListener('input', () => {
+                // 清除之前的定时器
+                clearTimeout(debounceTimer);
+                // 设置新的定时器，2秒后自动生成
+                debounceTimer = setTimeout(autoGenerateQuestions, 2000);
+            });
+            
+            // 点击按钮生成题目（保留原有功能）
+            generateBtn.addEventListener('click', async () => {
+                const knowledgeText = textInput.value.trim();
+                if (!knowledgeText) {
+                    alert('请输入知识点内容！');
+                    return;
+                }
+                
+                // 清除防抖定时器，避免重复生成
+                clearTimeout(debounceTimer);
+                
+                // 禁用按钮，防止重复点击
+                generateBtn.disabled = true;
+                generateBtn.textContent = '生成中...';
+                
+                try {
+                    // 直接调用generateQuestions，它内部会处理渲染
+                    await generator.generateQuestions(knowledgeText);
+                    // 滚动到问题区域
+                    document.querySelector('.questions-section').scrollIntoView({ behavior: 'smooth' });
+                } catch (error) {
+                    console.error('生成问题失败:', error);
+                    alert('生成问题失败，请重试！');
+                } finally {
+                    // 恢复按钮状态
+                    generateBtn.disabled = false;
+                    generateBtn.textContent = '生成问题';
+                }
+            });
+        });
+    </script>
+</body>
 </html>

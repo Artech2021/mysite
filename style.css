@@ -1,0 +1,460 @@
+/* 苹果风格CSS变量 */
+:root {
+    --apple-white: #FFFFFF;
+    --apple-gray-50: #F5F5F7;
+    --apple-gray-100: #E8E8ED;
+    --apple-gray-200: #D1D1D6;
+    --apple-gray-300: #C7C7CC;
+    --apple-gray-400: #8E8E93;
+    --apple-gray-500: #636366;
+    --apple-gray-600: #48484A;
+    --apple-gray-700: #3A3A3C;
+    --apple-gray-800: #2C2C2E;
+    --apple-gray-900: #1C1C1E;
+    --apple-blue: #0071E3;
+    --apple-blue-hover: #0077ED;
+    --apple-blue-active: #005BB5;
+    --apple-black: #000000;
+    --apple-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --apple-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --apple-border-radius: 12px;
+    --apple-border-radius-small: 8px;
+    --apple-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: var(--apple-font);
+    background-color: var(--apple-gray-50);
+    color: var(--apple-gray-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 容器样式 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 标题区域 */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 8px;
+    width: 680px;
+    margin: 0 auto;
+}
+
+.chinese-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--apple-gray-900);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.english-title {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--apple-gray-500);
+    letter-spacing: 1.5px;
+    word-spacing: 4px;
+    line-height: 1.4;
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-style: normal;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 主内容区域 */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+/* 文本框样式 - 150mm × 70mm */
+.text-input {
+    width: 100%;
+    max-width: 100%;
+    height: 70mm;
+    padding: 20px;
+    border: 1px solid var(--apple-gray-200);
+    border-radius: var(--apple-border-radius);
+    font-size: 16px;
+    font-family: var(--apple-font);
+    background-color: var(--apple-white);
+    color: var(--apple-gray-900);
+    resize: none;
+    box-shadow: var(--apple-shadow);
+    transition: var(--transition);
+    outline: none;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.text-input::placeholder {
+    color: var(--apple-gray-400);
+}
+
+.text-input:focus {
+    border-color: var(--apple-blue);
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+}
+
+/* 按钮样式 */
+.generate-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--apple-font);
+    color: var(--apple-white);
+    background-color: var(--apple-blue);
+    border: none;
+    border-radius: var(--apple-border-radius-small);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--apple-shadow);
+    min-width: auto;
+    width: auto;
+    text-align: center;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.generate-btn:hover {
+    background-color: var(--apple-blue-hover);
+    box-shadow: var(--apple-shadow-hover);
+    transform: translateY(-1px);
+}
+
+.generate-btn:active {
+    background-color: var(--apple-blue-active);
+    transform: translateY(0);
+    box-shadow: var(--apple-shadow);
+}
+
+.generate-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.2);
+}
+
+/* 问题展示区域样式 */
+.questions-section {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 680px;
+    padding: 0;
+    box-sizing: border-box;
+    margin: 40px auto 0;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--apple-gray-900);
+    margin-bottom: 24px;
+    text-align: center;
+    letter-spacing: -0.3px;
+}
+
+.questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.question-type-section {
+    background-color: var(--apple-white);
+    border-radius: var(--apple-border-radius);
+    padding: 20px;
+    box-shadow: var(--apple-shadow);
+    border: 1px solid var(--apple-gray-100);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.question-type-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--apple-gray-800);
+    margin-bottom: 20px;
+    letter-spacing: -0.2px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--apple-gray-100);
+}
+
+.questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.question-item {
+    background-color: var(--apple-gray-50);
+    border-radius: var(--apple-border-radius-small);
+    padding: 20px;
+    border: 1px solid var(--apple-gray-100);
+    transition: var(--transition);
+}
+
+.question-item:hover {
+    background-color: var(--apple-white);
+    box-shadow: var(--apple-shadow);
+    border-color: var(--apple-gray-200);
+}
+
+.question-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.question-number {
+    font-weight: 700;
+    color: var(--apple-blue);
+    font-size: 16px;
+    line-height: 1.5;
+    min-width: 24px;
+}
+
+.question-text {
+    font-size: 16px;
+    color: var(--apple-gray-900);
+    line-height: 1.6;
+    flex: 1;
+}
+
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.option-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background-color: var(--apple-white);
+    border-radius: var(--apple-border-radius-small);
+    border: 1px solid var(--apple-gray-100);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.option-item:hover {
+    border-color: var(--apple-blue);
+    background-color: rgba(0, 113, 227, 0.02);
+}
+
+.option-item input[type="radio"] {
+    margin-top: 4px;
+    accent-color: var(--apple-blue);
+    cursor: pointer;
+}
+
+.option-label {
+    font-weight: 600;
+    color: var(--apple-gray-700);
+    font-size: 14px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.option-text {
+    font-size: 14px;
+    color: var(--apple-gray-800);
+    line-height: 1.5;
+    flex: 1;
+}
+
+.true-false-options {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.true-false-options .option-item {
+    min-width: 100px;
+    justify-content: center;
+}
+
+.question-footer {
+    padding-top: 12px;
+    border-top: 1px solid var(--apple-gray-100);
+}
+
+.correct-answer {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--apple-blue);
+}
+
+.answer-input {
+    margin-top: 16px;
+}
+
+.answer-input textarea {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid var(--apple-gray-200);
+    border-radius: var(--apple-border-radius-small);
+    font-size: 14px;
+    font-family: var(--apple-font);
+    background-color: var(--apple-white);
+    color: var(--apple-gray-900);
+    resize: vertical;
+    min-height: 100px;
+    outline: none;
+    line-height: 1.6;
+    transition: var(--transition);
+}
+
+.answer-input textarea:focus {
+    border-color: var(--apple-blue);
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+}
+
+.answer-input textarea::placeholder {
+    color: var(--apple-gray-400);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 16px;
+    }
+    
+    .header {
+        margin-bottom: 20px;
+    }
+    
+    .chinese-title {
+        font-size: 24px;
+    }
+    
+    .english-title {
+        font-size: 12px;
+    }
+    
+    .text-input {
+        width: 100%;
+        height: 250px;
+        max-width: 100%;
+    }
+    
+    .generate-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .questions-section {
+        margin-top: 30px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+    }
+    
+    .question-type-section {
+        padding: 20px;
+    }
+    
+    .question-type-title {
+        font-size: 18px;
+    }
+    
+    .question-item {
+        padding: 16px;
+    }
+    
+    .true-false-options {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .true-false-options .option-item {
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .chinese-title {
+        font-size: 20px;
+    }
+    
+    .english-title {
+        font-size: 10px;
+    }
+    
+    .text-input {
+        height: 200px;
+        padding: 16px;
+        font-size: 14px;
+    }
+    
+    .generate-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+    
+    .question-text {
+        font-size: 14px;
+    }
+    
+    .option-text {
+        font-size: 13px;
+    }
+}
