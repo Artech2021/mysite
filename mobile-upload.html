@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>上传图片</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f7;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1c1c1e;
+        }
+        
+        .upload-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.2s;
+        }
+        
+        .upload-btn:hover {
+            background-color: #0077ed;
+        }
+        
+        #image-input {
+            display: none;
+        }
+        
+        /* 图片预览容器 */
+        .image-preview-container {
+            display: none;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        /* 单个图片预览项 */
+        .image-preview-item {
+            flex: 1 1 calc(50% - 10px);
+            max-width: calc(50% - 10px);
+        }
+        
+        /* 预览图片 */
+        .preview-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #f5f5f7;
+        }
+        
+        #submit-btn {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background-color: #34c759;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        #submit-btn:hover {
+            background-color: #30b953;
+        }
+        
+        .status-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .status-success {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: #34c759;
+        }
+        
+        .status-error {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+        }
+        
+        .status-loading {
+            background-color: rgba(0, 113, 227, 0.1);
+            color: #0071e3;
+        }
+        
+        .instructions {
+            text-align: center;
+            color: #636366;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>选择相册图片</h1>
+        
+        <button class="upload-btn" onclick="document.getElementById('image-input').click()">
+            选择图片
+        </button>
+        
+        <input type="file" id="image-input" accept="image/*" capture="environment" multiple>
+        
+        <!-- 图片预览容器，支持多张图片 -->
+        <div id="image-preview-container" class="image-preview-container"></div>
+        
+        <button id="submit-btn" onclick="uploadImage()">
+            上传并识别
+        </button>
+        
+        <div id="status-message" class="status-message"></div>
+        
+        <p class="instructions">
+            请选择一张包含文字的图片，系统将自动识别图片中的文字
+        </p>
+    </div>
+    
+    <script>
+        let selectedImages = [];
+        
+        // 页面加载完成后自动触发文件选择框
+        window.addEventListener('DOMContentLoaded', function() {
+            // 延迟100毫秒后自动触发，确保页面完全加载
+            setTimeout(function() {
+                document.getElementById('image-input').click();
+            }, 100);
+        });
+        
+        // 获取URL参数
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+        
+        // 图片选择事件
+        document.getElementById('image-input').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                selectedImages = files;
+                
+                // 显示图片预览
+                showImagePreviews(files);
+                
+                // 显示上传按钮
+                document.getElementById('submit-btn').style.display = 'block';
+            } else {
+                // 用户取消选择图片，重新打开选择对话框
+                setTimeout(function() {
+                    document.getElementById('image-input').click();
+                }, 500);
+            }
+        });
+        
+        // 显示多张图片预览
+        function showImagePreviews(files) {
+            const previewContainer = document.getElementById('image-preview-container');
+            
+            // 清空之前的预览
+            previewContainer.innerHTML = '';
+            
+            // 显示预览容器
+            previewContainer.style.display = 'flex';
+            
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'image-preview-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    
+                    previewItem.appendChild(img);
+                    previewContainer.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        // 上传图片并识别
+        async function uploadImage() {
+            if (selectedImages.length === 0) {
+                showStatus('请先选择图片', 'error');
+                return;
+            }
+            
+            const sessionId = getUrlParameter('sessionId');
+            if (!sessionId) {
+                showStatus('会话ID无效', 'error');
+                return;
+            }
+            
+            showStatus('正在上传图片...', 'loading');
+            
+            try {
+                const formData = new FormData();
+                
+                // 添加所有选中的图片
+                selectedImages.forEach((image, index) => {
+                    formData.append(`image${index}`, image);
+                });
+                
+                formData.append('sessionId', sessionId);
+                formData.append('imageCount', selectedImages.length);
+                
+                const response = await fetch('/api/upload-image', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus('识别完成！文字已发送到电脑端', 'success');
+                    
+                    // 3秒后返回
+                    setTimeout(() => {
+                        window.history.back();
+                    }, 3000);
+                } else {
+                    showStatus('识别失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showStatus('上传失败: ' + error.message, 'error');
+            }
+        }
+        
+        // 显示状态信息
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('status-message');
+            statusElement.textContent = message;
+            statusElement.className = `status-message status-${type}`;
+            statusElement.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
