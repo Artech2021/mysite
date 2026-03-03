@@ -19,6 +19,16 @@
         <main class="main-content">
             <div class="input-section">
                 <textarea class="text-input" placeholder="请输入知识点内容..."></textarea>
+                <div class="model-selector">
+                    <label for="model-select">选择AI模型：</label>
+                    <select id="model-select">
+                        <option value="random">随机模型</option>
+                        <option value="Doubao">豆包</option>
+                        <option value="DeepSeek">DeepSeek</option>
+                        <option value="ChatGPT">ChatGPT</option>
+                        <option value="MiniMax">MiniMax</option>
+                    </select>
+                </div>
                 <button class="generate-btn">生成问题</button>
             </div>
             
@@ -909,7 +919,53 @@
             
             // 生成所有问题 - 智能接入大语言模型
             // 生成所有问题 - 异步版本，支持await
-            async generateQuestions(text) {
+            async generateQuestions(text, modelName = 'random') {
+                // 模型优先级列表 - 优先尝试豆包和DeepSeek
+                const modelPriorityList = ['Doubao', 'DeepSeek', 'ChatGPT', 'MiniMax'];
+                
+                // 如果用户指定了模型，将其放在首位
+                let modelsToTry = [...modelPriorityList];
+                if (modelName !== 'random' && modelsToTry.includes(modelName)) {
+                    modelsToTry = [modelName, ...modelsToTry.filter(m => m !== modelName)];
+                }
+                
+                // 尝试每个模型，直到成功或所有模型都失败
+                for (const currentModel of modelsToTry) {
+                    try {
+                        console.log(`尝试使用模型: ${currentModel}`);
+                        // 直接调用AI模型API生成题目
+                        const apiResult = await this.callLLMAPI(text, currentModel);
+                        
+                        if (apiResult.success) {
+                            // 使用AI生成的问题
+                            this.questions = apiResult.questions;
+                            
+                            // 确保题目数量符合要求
+                            if (!this.questions.singleChoice) this.questions.singleChoice = [];
+                            if (!this.questions.trueFalse) this.questions.trueFalse = [];
+                            if (!this.questions.shortAnswer) this.questions.shortAnswer = [];
+                            
+                            // 渲染问题
+                            this.renderQuestions();
+                            console.log(`成功使用模型: ${currentModel}生成题目`);
+                            return true;
+                        } else {
+                            console.error(`${currentModel} API调用失败:`, apiResult.message);
+                            // 继续尝试下一个模型
+                        }
+                    } catch (error) {
+                        console.error(`${currentModel} 生成问题失败:`, error);
+                        // 继续尝试下一个模型
+                    }
+                }
+                
+                // 所有模型都失败时，降级使用本地生成器
+                console.log('所有AI模型都调用失败，降级使用本地生成器');
+                return this.generateQuestionsLocally(text);
+            }
+            
+            // 本地生成问题的降级方法
+            generateQuestionsLocally(text) {
                 try {
                     const points = this.parseKnowledgePoints(text); // 解析知识点
                     if (points.length === 0) { // 如果没有找到有效的知识点
@@ -924,7 +980,7 @@
                         shortAnswer: []     // 简答题数组
                     };
                     
-                    // 首先使用本地生成器生成所有题型，确保快速响应
+                    // 使用本地生成器生成所有题型
                     this.generateSingleChoiceQuestions(points); // 生成单选题
                     this.generateTrueFalseQuestions(points);    // 生成判断题
                     this.generateShortAnswerQuestions(points);  // 生成简答题
@@ -933,99 +989,189 @@
                     this.renderQuestions(); // 渲染所有问题
                     return true; // 返回成功
                 } catch (error) {
-                    console.error('生成问题失败:', error); // 输出错误信息
-                    // 如果发生错误，尝试使用最小化的本地生成器生成题目
-                    try {
-                        // 重置问题对象
-                        this.questions = {
-                            singleChoice: [],   // 单选题数组
-                            trueFalse: [],      // 判断题数组
-                            shortAnswer: []     // 简答题数组
-                        };
-                        
-                        // 使用简化的知识点生成题目
-                        const simplePoints = text.split(/\n/).filter(line => line.trim().length > 0).slice(0, 5); // 按行分割并过滤
-                        
-                        // 生成至少一个单选题
-                        if (simplePoints.length > 0) {
-                            this.generateSingleChoiceQuestions([simplePoints[0]]); // 使用第一个有效行生成单选题
-                        }
-                        
-                        // 生成至少一个判断题
-                        if (simplePoints.length > 0) {
-                            this.generateTrueFalseQuestions([simplePoints[0]]); // 使用第一个有效行生成判断题
-                        }
-                        
-                        // 生成至少一个简答题
-                        if (simplePoints.length > 0) {
-                            this.generateShortAnswerQuestions([simplePoints[0]]); // 使用第一个有效行生成简答题
-                        }
-                        
-                        // 渲染问题
-                        this.renderQuestions(); // 渲染所有问题
-                        return true; // 返回成功
-                    } catch (secondError) {
-                        console.error('简化生成也失败:', secondError); // 输出错误信息
-                        return false; // 返回失败
-                    }
+                    console.error('本地生成也失败:', error); // 输出错误信息
+                    return false; // 返回失败
                 }
             }
             
             // 调用大语言模型API
-            async callLLMAPI(text) {
-                // 调用字节跳动/火山引擎最新大语言模型API
-                // 支持的模型：火山方舟、豆包、Doubao Pro等最新模型
-                try {
-                    // 真实API调用示例 - 字节跳动/火山引擎
-                    const response = await fetch('https://ark.cn-beijing.volces.com/api/v3/chat/completions', {
-                        method: 'POST',
+            async callLLMAPI(text, selectedModelName = 'random') {
+                // 从localStorage获取API密钥
+                const getAPIKey = (modelName) => {
+                    return localStorage.getItem(`${modelName}_API_KEY`) || `YOUR_${modelName.toUpperCase()}_API_KEY`;
+                };
+                
+                // 模型配置对象
+                const models = [
+                    {
+                        name: 'Doubao',
+                        url: 'https://ark.cn-beijing.volces.com/api/v3/chat/completions',
+                        apiKey: getAPIKey('Doubao'),
+                        model: 'doubao-pro-4k',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer YOUR_API_KEY', // 替换为真实API密钥
+                            'Authorization': `Bearer ${getAPIKey('Doubao')}`,
                             'X-Volc-Region': 'cn-beijing'
                         },
-                        body: JSON.stringify({
-                            model: 'doubao-pro-4k', // 使用字节跳动最新模型
-                            messages: [
-                                {
-                                    role: 'system',
-                                    content: '你是一个专业的教育评估专家，擅长生成高质量、高难度的测试题目。请根据用户提供的知识点内容，生成能有效测试知识掌握程度的测试题，包括单选题、判断题和简答题。题目必须紧密围绕知识点，能测试学生对知识点的理解、应用和分析能力。'
-                                },
-                                {
-                                    role: 'user',
-                                    content: `请基于以下知识点内容生成能有效测试知识掌握程度的高质量测试题：\n\n${text}\n\n要求：\n1. 题型包括：单选题、判断题、简答题\n2. 难度：中高难度到高难度\n3. 单选题：测试对知识点细节的理解，选项要有高度迷惑性\n4. 判断题：测试对知识点准确性的掌握，包含复杂条件\n5. 简答题：测试对知识点的深入理解和应用能力\n6. 所有题目必须紧密基于提供的知识点内容\n7. 题目要能区分不同掌握程度的学生\n8. 输出格式：JSON格式，包含questions对象，下分singleChoice、trueFalse、shortAnswer数组`
-                                }
-                            ],
-                            temperature: 0.7, // 控制生成的随机性
-                            max_tokens: 2000, // 控制生成的文本长度
-                            top_p: 0.9, // 控制生成的多样性
-                            frequency_penalty: 0.5, // 降低重复内容
-                            presence_penalty: 0.3 // 鼓励新内容
-                        })
+                        responseParser: this.parseStandardResponse
+                    },
+                    {
+                        name: 'DeepSeek',
+                        url: 'https://api.deepseek.com/v1/chat/completions',
+                        apiKey: getAPIKey('DeepSeek'),
+                        model: 'deepseek-chat',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${getAPIKey('DeepSeek')}`
+                        },
+                        responseParser: this.parseStandardResponse
+                    },
+                    {
+                        name: 'ChatGPT',
+                        url: 'https://api.openai.com/v1/chat/completions',
+                        apiKey: 'YOUR_OPENAI_API_KEY',
+                        model: 'gpt-3.5-turbo',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer YOUR_OPENAI_API_KEY'
+                        },
+                        responseParser: this.parseStandardResponse
+                    },
+                    {
+                        name: 'MiniMax',
+                        url: 'https://api.minimax.chat/v1/text/chatcompletion_pro',
+                        apiKey: 'YOUR_MINIMAX_API_KEY',
+                        model: 'abab5.5-chat',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer YOUR_MINIMAX_API_KEY'
+                        },
+                        responseParser: this.parseMiniMaxResponse
+                    }
+                ];
+                
+                // 选择模型
+                let selectedModel;
+                if (selectedModelName === 'random') {
+                    // 随机选择一个模型
+                    selectedModel = models[Math.floor(Math.random() * models.length)];
+                } else {
+                    // 根据名称选择模型
+                    selectedModel = models.find(model => model.name === selectedModelName);
+                    if (!selectedModel) {
+                        console.error(`未找到指定模型: ${selectedModelName}，将使用随机模型`);
+                        selectedModel = models[Math.floor(Math.random() * models.length)];
+                    }
+                }
+                console.log(`使用模型: ${selectedModel.name}`);
+                
+                try {
+                    // 构建请求体
+                    const requestBody = {
+                        model: selectedModel.model,
+                        messages: [
+                            {
+                                role: 'system',
+                                content: '你是一个专业的教育评估专家，擅长生成高质量、高难度的测试题目。请根据用户提供的知识点内容，生成能有效测试知识掌握程度的测试题，包括单选题、判断题和简答题。题目必须紧密围绕知识点，能测试学生对知识点的理解、应用和分析能力。'
+                            },
+                            {
+                                role: 'user',
+                                content: `请基于以下知识点内容生成能有效测试知识掌握程度的高质量测试题：\n\n${text}\n\n要求：\n1. 题型包括：单选题（10道）、判断题（10道）、简答题（3道）\n2. 难度：中高难度到高难度\n3. 单选题：测试对知识点细节的理解，选项要有高度迷惑性，四选一，只有一个正确答案\n4. 判断题：测试对知识点准确性的掌握，包含复杂条件\n5. 简答题：测试对知识点的深入理解和应用能力\n6. 所有题目必须紧密基于提供的知识点内容\n7. 题目要能区分不同掌握程度的学生\n8. 输出格式：严格JSON格式，包含questions对象，下分singleChoice、trueFalse、shortAnswer数组。\n   singleChoice数组中每个对象包含：id（数字）、question（题目文本）、options（选项数组，每个选项包含id和text）、correctAnswer（正确选项ID）\n   trueFalse数组中每个对象包含：id（数字）、question（题目文本）、correctAnswer（正确答案："正确"或"错误"）\n   shortAnswer数组中每个对象包含：id（数字）、question（题目文本）`
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 3000,
+                        top_p: 0.9
+                    };
+                    
+                    // 特殊处理MiniMax模型的请求体
+                    if (selectedModel.name === 'MiniMax') {
+                        requestBody.bot_setting = [
+                            {
+                                bot_name: '测试题生成专家',
+                                content: requestBody.messages[0].content
+                            }
+                        ];
+                        requestBody.messages = requestBody.messages.slice(1);
+                        requestBody.messages[0].sender_type = 'USER';
+                        requestBody.messages[0].sender_name = '用户';
+                    }
+                    
+                    // 发送API请求
+                    const response = await fetch(selectedModel.url, {
+                        method: 'POST',
+                        headers: selectedModel.headers,
+                        body: JSON.stringify(requestBody)
                     });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+                    }
                     
                     const data = await response.json();
                     
-                    // 解析API响应
+                    // 使用模型特定的解析器解析响应
+                    return selectedModel.responseParser(data);
+                    
+                } catch (error) {
+                    console.error(`${selectedModel.name} API调用失败:`, error);
+                    return { success: false, message: `${selectedModel.name} API调用失败: ${error.message}` };
+                }
+            }
+            
+            // 解析标准格式的API响应（Doubao, DeepSeek, ChatGPT）
+            parseStandardResponse(data) {
+                try {
                     if (data.choices && data.choices.length > 0) {
                         const content = data.choices[0].message.content;
-                        // 尝试解析JSON格式的响应
-                        try {
-                            const questionsData = JSON.parse(content);
+                        // 提取JSON部分
+                        const jsonMatch = content.match(/\{[\s\S]*\}/);
+                        if (jsonMatch) {
+                            const questionsData = JSON.parse(jsonMatch[0]);
                             return {
                                 success: true,
                                 questions: questionsData.questions
                             };
-                        } catch (parseError) {
-                            console.error('API响应JSON解析失败:', parseError);
-                            return { success: false, message: 'API响应格式错误' };
                         }
+                        // 尝试直接解析整个内容
+                        const questionsData = JSON.parse(content);
+                        return {
+                            success: true,
+                            questions: questionsData.questions
+                        };
                     }
-                    
-                    return { success: false, message: 'API调用成功但未返回有效数据' };
-                } catch (error) {
-                    console.error('字节跳动/火山引擎API调用失败，使用本地生成器:', error);
-                    return { success: false, error: error.message };
+                    return { success: false, message: 'API响应中没有找到choices字段' };
+                } catch (parseError) {
+                    console.error('标准响应解析失败:', parseError);
+                    return { success: false, message: 'API响应格式错误' };
+                }
+            }
+            
+            // 解析MiniMax模型的响应
+            parseMiniMaxResponse(data) {
+                try {
+                    if (data.choices && data.choices.length > 0) {
+                        const content = data.choices[0].message.content;
+                        // 提取JSON部分
+                        const jsonMatch = content.match(/\{[\s\S]*\}/);
+                        if (jsonMatch) {
+                            const questionsData = JSON.parse(jsonMatch[0]);
+                            return {
+                                success: true,
+                                questions: questionsData.questions
+                            };
+                        }
+                        // 尝试直接解析整个内容
+                        const questionsData = JSON.parse(content);
+                        return {
+                            success: true,
+                            questions: questionsData.questions
+                        };
+                    }
+                    return { success: false, message: 'MiniMax响应中没有找到choices字段' };
+                } catch (parseError) {
+                    console.error('MiniMax响应解析失败:', parseError);
+                    return { success: false, message: 'MiniMax响应格式错误' };
                 }
             }
             
@@ -1199,11 +1345,15 @@
                 const knowledgeText = textInput.value.trim();
                 if (knowledgeText.length < 10) return; // 至少输入10个字符才自动生成
                 
+                // 获取用户选择的模型
+                const modelSelect = document.getElementById('model-select');
+                const selectedModel = modelSelect.value;
+                
                 // 禁用按钮，防止重复点击
                 generateBtn.disabled = true;
                 generateBtn.textContent = '生成中...';
                 
-                generator.generateQuestions(knowledgeText)
+                generator.generateQuestions(knowledgeText, selectedModel)
                     .then(success => {
                         if (success) {
                             // 滚动到问题区域
@@ -1236,6 +1386,10 @@
                     return;
                 }
                 
+                // 获取用户选择的模型
+                const modelSelect = document.getElementById('model-select');
+                const selectedModel = modelSelect.value;
+                
                 // 清除防抖定时器，避免重复生成
                 clearTimeout(debounceTimer);
                 
@@ -1245,7 +1399,7 @@
                 
                 try {
                     // 直接调用generateQuestions，它内部会处理渲染
-                    await generator.generateQuestions(knowledgeText);
+                    await generator.generateQuestions(knowledgeText, selectedModel);
                     // 滚动到问题区域
                     document.querySelector('.questions-section').scrollIntoView({ behavior: 'smooth' });
                 } catch (error) {
