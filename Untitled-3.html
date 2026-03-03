@@ -1,89 +1,104 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-<meta charset="UTF-8">
-<title>Notebook-style Question Generator</title>
-<style>
-body {
-  margin: 0;
-  font-family: system-ui;
-  background: #fff;
-  color: #111;
+<!DOCTYPE html> <!-- HTML5文档类型声明 -->
+<html lang="zh"> <!-- 根元素，设置页面语言为中文 -->
+<head> <!-- 头部区域，包含页面元信息 -->
+<meta charset="UTF-8"> <!-- 设置页面字符编码为UTF-8 -->
+<title>Notebook-style Question Generator</title> <!-- 设置页面标题 -->
+<style> <!-- 内联样式表 -->
+body { <!-- 页面主体样式 -->
+  margin: 0; <!-- 清除默认外边距 -->
+  font-family: system-ui; <!-- 设置字体族 -->
+  background: #fff; <!-- 设置背景色为白色 -->
+  color: #111; <!-- 设置文本颜色为深灰色 -->
 }
-.wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: 100vh;
+.wrapper { <!-- 容器样式，使用网格布局 -->
+  display: grid; <!-- 设置为网格布局 -->
+  grid-template-columns: 1fr 1fr; <!-- 两列等宽布局 -->
+  height: 100vh; <!-- 高度占满整个视口 -->
 }
-textarea {
-  border: none;
-  padding: 20px;
-  font-size: 14px;
-  outline: none;
-  resize: none;
+textarea { <!-- 文本框样式 -->
+  border: none; <!-- 无边框 -->
+  padding: 20px; <!-- 内边距20px -->
+  font-size: 14px; <!-- 字体大小14px -->
+  outline: none; <!-- 移除焦点轮廓 -->
+  resize: none; <!-- 禁止调整大小 -->
 }
-.panel {
-  border-left: 1px solid #eee;
-  padding: 20px;
-  overflow-y: auto;
+.panel { <!-- 结果面板样式 -->
+  border-left: 1px solid #eee; <!-- 左侧边框1px，浅灰色 -->
+  padding: 20px; <!-- 内边距20px -->
+  overflow-y: auto; <!-- 允许垂直滚动 -->
 }
-button {
-  margin-top: 10px;
-  padding: 8px 14px;
-  background: #111;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+button { <!-- 按钮样式 -->
+  margin-top: 10px; <!-- 顶部外边距10px -->
+  padding: 8px 14px; <!-- 内边距8px 14px -->
+  background: #111; <!-- 背景色深灰色 -->
+  color: #fff; <!-- 文本颜色白色 -->
+  border: none; <!-- 无边框 -->
+  border-radius: 6px; <!-- 圆角6px -->
+  cursor: pointer; <!-- 鼠标悬停时显示手型指针 -->
 }
-.question {
-  margin-bottom: 16px;
-  font-size: 14px;
+.question { <!-- 问题样式 -->
+  margin-bottom: 16px; <!-- 底部外边距16px -->
+  font-size: 14px; <!-- 字体大小14px -->
 }
-.source {
-  font-size: 12px;
-  color: #666;
+.source { <!-- 原文依据样式 -->
+  font-size: 12px; <!-- 字体大小12px -->
+  color: #666; <!-- 文本颜色灰色 -->
 }
-</style>
-</head>
+</style> <!-- 结束内联样式表 -->
+</head> <!-- 结束头部区域 -->
 
-<body>
-<div class="wrapper">
-  <textarea id="text" placeholder="粘贴文章内容…"></textarea>
+<body> <!-- 主体区域 -->
+<div class="wrapper"> <!-- 网格容器 -->
+  <textarea id="text" placeholder="粘贴文章内容…"></textarea> <!-- 文本输入框，用于输入文章内容 -->
 
-  <div class="panel">
-    <button onclick="generate()">生成题库</button>
-    <div id="result"></div>
-  </div>
-</div>
+  <div class="panel"> <!-- 结果面板 -->
+    <button onclick="generate()">生成题库</button> <!-- 生成题库按钮，点击触发generate函数 -->
+    <div id="result"></div> <!-- 结果容器，用于显示生成的题库 -->
+  </div> <!-- 结束结果面板 -->
+</div> <!-- 结束网格容器 -->
 
-<script>
-async function generate() {
-  const text = document.getElementById("text").value;
-  const res = await fetch("/api/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text })
-  });
-  const data = await res.json();
+<script> <!-- JavaScript代码 -->
+async function generate() { <!-- 生成题库异步函数 -->
+  const text = document.getElementById("text").value; <!-- 获取输入文本 -->
+  if (!text.trim()) { <!-- 检查文本是否为空 -->
+    document.getElementById("result").innerHTML = "<div style='color: red;'>请输入文章内容</div>"; <!-- 显示错误提示 -->
+    return; <!-- 直接返回 -->
+  }
 
-  let html = "<h3>选择题</h3>";
-  data.choice.forEach(q => {
-    html += `<div class="question">${q.question}<br>${q.options.join("<br>")}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`;
-  });
+  try { <!-- 开始错误处理块 -->
+    const res = await fetch("/api/generate", { <!-- 发送请求到API端点 -->
+      method: "POST", <!-- 请求方法为POST -->
+      headers: { "Content-Type": "application/json" }, <!-- 设置内容类型为JSON -->
+      body: JSON.stringify({ text }) <!-- 将文本内容转换为JSON作为请求体 -->
+    });
 
-  html += "<h3>判断题</h3>";
-  data.judge.forEach(q => {
-    html += `<div class="question">${q.question}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`;
-  });
+    if (!res.ok) { <!-- 检查API响应是否成功 -->
+      throw new Error(`API请求失败: ${res.status}`); <!-- 如果失败，抛出错误 -->
+    }
 
-  html += "<h3>问答题</h3>";
-  data.qa.forEach(q => {
-    html += `<div class="question">${q.question}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`;
-  });
+    const data = await res.json(); <!-- 解析API响应为JSON -->
 
-  document.getElementById("result").innerHTML = html;
+    let html = "<h3>选择题</h3>"; <!-- 初始化输出HTML，添加选择题标题 -->
+    data.choice.forEach(q => { <!-- 遍历选择题数组 -->
+      html += `<div class="question">${q.question}<br>${q.options.join("<br>")}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`; <!-- 生成选择题HTML -->
+    });
+
+    html += "<h3>判断题</h3>"; <!-- 添加判断题标题 -->
+    data.judge.forEach(q => { <!-- 遍历判断题数组 -->
+      html += `<div class="question">${q.question}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`; <!-- 生成判断题HTML -->
+    });
+
+    html += "<h3>问答题</h3>"; <!-- 添加问答题标题 -->
+    data.qa.forEach(q => { <!-- 遍历问答题数组 -->
+      html += `<div class="question">${q.question}<br><b>答案：</b>${q.answer}<div class="source">${q.source}</div></div>`; <!-- 生成问答题HTML -->
+    });
+
+    document.getElementById("result").innerHTML = html; <!-- 将生成的HTML插入到结果容器 -->
+  } catch (error) { <!-- 处理错误 -->
+    console.error("生成题目失败:", error); <!-- 记录错误信息到控制台 -->
+    document.getElementById("result").innerHTML = `<div style='color: red;'>生成题目失败: ${error.message}</div>`; <!-- 显示错误提示给用户 -->
+  }
 }
-</script>
-</body>
-</html>
+</script> <!-- 结束JavaScript代码 -->
+</body> <!-- 结束主体区域 -->
+</html> <!-- 结束HTML文档 -->

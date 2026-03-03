@@ -22,26 +22,54 @@
                 <button class="generate-btn">生成问题</button>
             </div>
             
+            <!-- 页面切换导航 -->
+            <div class="page-nav">
+                <button class="page-btn active" data-page="questions">题目页面</button>
+                <button class="page-btn" data-page="answers">答案页面</button>
+            </div>
+            
             <!-- 问题展示区域 -->
-            <div class="questions-section">
-                <h2 class="section-title">测试题目</h2>
-                <div class="questions-container">
-                    <!-- 单选题区域 -->
-                    <div class="question-type-section">
-                        <h3 class="question-type-title">单选题</h3>
-                        <div id="single-choice-questions" class="questions-list"></div>
+            <div id="questions-page" class="page active">
+                <div class="questions-section">
+                    <h2 class="section-title">测试题目</h2>
+                    <div class="questions-container">
+                        <!-- 单选题区域 -->
+                        <div class="question-type-section">
+                            <h3 class="question-type-title">单选题</h3>
+                            <div id="single-choice-questions" class="questions-list"></div>
+                        </div>
+                        
+                        <!-- 判断题区域 -->
+                        <div class="question-type-section">
+                            <h3 class="question-type-title">判断题</h3>
+                            <div id="true-false-questions" class="questions-list"></div>
+                        </div>
+                        
+                        <!-- 简答题区域 -->
+                        <div class="question-type-section">
+                            <h3 class="question-type-title">简答题</h3>
+                            <div id="short-answer-questions" class="questions-list"></div>
+                        </div>
                     </div>
-                    
-                    <!-- 判断题区域 -->
-                    <div class="question-type-section">
-                        <h3 class="question-type-title">判断题</h3>
-                        <div id="true-false-questions" class="questions-list"></div>
-                    </div>
-                    
-                    <!-- 简答题区域 -->
-                    <div class="question-type-section">
-                        <h3 class="question-type-title">简答题</h3>
-                        <div id="short-answer-questions" class="questions-list"></div>
+                </div>
+            </div>
+            
+            <!-- 答案展示区域 -->
+            <div id="answers-page" class="page">
+                <div class="answers-section">
+                    <h2 class="section-title">正确答案</h2>
+                    <div class="answers-container">
+                        <!-- 单选题答案区域 -->
+                        <div class="answer-type-section">
+                            <h3 class="answer-type-title">单选题答案</h3>
+                            <div id="single-choice-answers" class="answers-list"></div>
+                        </div>
+                        
+                        <!-- 判断题答案区域 -->
+                        <div class="answer-type-section">
+                            <h3 class="answer-type-title">判断题答案</h3>
+                            <div id="true-false-answers" class="answers-list"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -130,18 +158,26 @@
             
             // 生成单选题 - 高难度增强版
             generateSingleChoiceQuestions(points) {
-                this.questions.singleChoice = points.slice(0, 5).map((point, index) => { // 最多生成5个单选题
+                this.questions.singleChoice = points.slice(0, 10).map((point, index) => { // 最多生成10个单选题
                     // 更具挑战性的问题类型
                     const questionTypes = [ // 定义单选题的问题类型模板
-                        `在考虑了${this.generateTechnicalConstraint()}的情况下，关于"${point}"的以下表述中，哪一项最准确地反映了其本质特征？`,
-                        `以下关于"${point}"的描述中，哪一项同时考虑了${this.generateMultipleConstraints()}？`,
-                        `对于"${point}"的理解，以下哪项包含了其在${this.generateComplexScenario()}中的完整应用场景？`,
-                        `关于"${point}"的表述，哪一项正确区分了其与${this.generateRelatedConcepts()}的本质差异？`,
-                        `在${this.generateAdvancedPerspective()}视角下，"${point}"的核心价值体现在以下哪一项？`,
-                        `以下哪一项最准确地描述了"${point}"与${this.generateCrossDisciplinaryConcept()}的关系？`
+                        "在考虑了{constraint}的情况下，关于'{point}'的以下表述中，哪一项最准确地反映了其本质特征？",
+                        "以下关于'{point}'的描述中，哪一项同时考虑了{constraints}？",
+                        "对于'{point}'的理解，以下哪项包含了其在{scenario}中的完整应用场景？",
+                        "关于'{point}'的表述，哪一项正确区分了其与{relatedConcepts}的本质差异？",
+                        "在{perspective}视角下，'{point}'的核心价值体现在以下哪一项？",
+                        "以下哪一项最准确地描述了'{point}'与{crossConcept}的关系？"
                     ];
                     
-                    const question = questionTypes[Math.floor(Math.random() * questionTypes.length)]; // 随机选择一个问题类型
+                    let question = questionTypes[Math.floor(Math.random() * questionTypes.length)]; // 随机选择一个问题类型
+                    // 替换模板参数
+                    question = question.replace('{point}', point)
+                                      .replace('{constraint}', this.generateTechnicalConstraint())
+                                      .replace('{constraints}', this.generateMultipleConstraints())
+                                      .replace('{scenario}', this.generateComplexScenario())
+                                      .replace('{relatedConcepts}', this.generateRelatedConcepts())
+                                      .replace('{perspective}', this.generateAdvancedPerspective())
+                                      .replace('{crossConcept}', this.generateCrossDisciplinaryConcept());
                     const correctOption = point.trim();                                          // 正确选项是当前知识点
                     const distractors = this.generateHighQualityDistractors(correctOption, 3);   // 生成3个高质量干扰项
                     
@@ -394,7 +430,7 @@
             
             // 生成判断题 - 高难度增强版
             generateTrueFalseQuestions(points) {
-                this.questions.trueFalse = points.slice(0, 4).map((point, index) => { // 最多生成4个判断题
+                this.questions.trueFalse = points.slice(0, 10).map((point, index) => { // 最多生成10个判断题
                     const isTrue = Math.random() > 0.5; // 随机决定题目是正确还是错误
                     let questionText; // 题目文本
                     
@@ -628,25 +664,44 @@
                     // 更具挑战性的问题类型
                     const questionTypes = [ // 定义简答题的问题类型模板
                         // 高级分析性问题
-                        `在考虑${this.generateMultipleTechnicalConstraints()}的情况下，请从${this.generateMultipleAnalysisDimensions()}维度深入分析"${point}"的核心局限性，并探讨如何在${this.generateComplexScenario()}中设计创新解决方案来克服这些限制。`,
+                        "在考虑{techConstraints}的情况下，请从{analysisDims}维度深入分析'{point}'的核心局限性，并探讨如何在{complexScenario}中设计创新解决方案来克服这些限制。",
                         
                         // 深度比较性问题
-                        `详细比较"${point}"与${this.generateMultipleRelatedConcepts()}的本质差异，包括它们在${this.generateEmergingDomain()}中的适用性、局限性以及在${this.generateFutureTechnology()}中的潜在应用前景。`,
+                        "详细比较'{point}'与{relatedConcepts}的本质差异，包括它们在{emergingDomain}中的适用性、局限性以及在{futureTech}中的潜在应用前景。",
                         
                         // 复杂应用扩展性问题
-                        `基于"${point}"的核心原理，设计一个适用于${this.generateHighStakesScenario()}的完整解决方案，包括${this.generateImplementationConsiderations()}，并分析其在${this.generateEthicalAndTechnicalChallenges()}方面的权衡。`,
+                        "基于'{point}'的核心原理，设计一个适用于{highStakesScenario}的完整解决方案，包括{implementationCons}，并分析其在{ethicalTechChallenges}方面的权衡。",
                         
                         // 高级批判性问题
-                        `从${this.generateMultiplePerspectives()}视角评估"${point}"在${this.generateEmergingField()}中的有效性，考虑${this.generateConflictingEvidence()}，并提出你对其未来发展方向的预测和建议。`,
+                        "从{multiplePerspectives}视角评估'{point}'在{emergingField}中的有效性，考虑{conflictingEvidence}，并提出你对其未来发展方向的预测和建议。",
                         
                         // 跨学科综合创新性问题
-                        `结合${this.generateMultipleCrossDisciplinaryConcepts()}和"${point}"的核心思想，提出一个创新性的跨领域框架来解决${this.generateGrandChallengeProblem()}，并详细讨论其实施的关键步骤、潜在障碍和预期影响。`,
+                        "结合{crossDisciplinaryConcepts}和'{point}'的核心思想，提出一个创新性的跨领域框架来解决{grandChallenge}，并详细讨论其实施的关键步骤、潜在障碍和预期影响。",
                         
                         // 深入解释性问题 - 增强版
-                        `请详细解释"${point}"的理论基础、数学表达（如果适用）、实验验证过程以及它如何从${this.generateFundamentalPrinciple()}推导而来，并结合${this.generateRecentResearchFindings()}举例说明其在${this.generateCuttingEdgeApplication()}中的最新应用和未来发展趋势。`
+                        "请详细解释'{point}'的理论基础、数学表达（如果适用）、实验验证过程以及它如何从{fundamentalPrinciple}推导而来，并结合{recentResearch}举例说明其在{cuttingEdgeApp}中的最新应用和未来发展趋势。"
                     ];
                     
-                    const question = questionTypes[Math.floor(Math.random() * questionTypes.length)]; // 随机选择一个问题类型
+                    let question = questionTypes[Math.floor(Math.random() * questionTypes.length)]; // 随机选择一个问题类型
+                    // 替换模板参数
+                    question = question.replace('{point}', point)
+                                      .replace('{techConstraints}', this.generateMultipleTechnicalConstraints())
+                                      .replace('{analysisDims}', this.generateMultipleAnalysisDimensions())
+                                      .replace('{complexScenario}', this.generateComplexScenario())
+                                      .replace('{relatedConcepts}', this.generateMultipleRelatedConcepts())
+                                      .replace('{emergingDomain}', this.generateEmergingDomain())
+                                      .replace('{futureTech}', this.generateFutureTechnology())
+                                      .replace('{highStakesScenario}', this.generateHighStakesScenario())
+                                      .replace('{implementationCons}', this.generateImplementationConsiderations())
+                                      .replace('{ethicalTechChallenges}', this.generateEthicalAndTechnicalChallenges())
+                                      .replace('{multiplePerspectives}', this.generateMultiplePerspectives())
+                                      .replace('{emergingField}', this.generateEmergingField())
+                                      .replace('{conflictingEvidence}', this.generateConflictingEvidence())
+                                      .replace('{crossDisciplinaryConcepts}', this.generateMultipleCrossDisciplinaryConcepts())
+                                      .replace('{grandChallenge}', this.generateGrandChallengeProblem())
+                                      .replace('{fundamentalPrinciple}', this.generateFundamentalPrinciple())
+                                      .replace('{recentResearch}', this.generateRecentResearchFindings())
+                                      .replace('{cuttingEdgeApp}', this.generateCuttingEdgeApplication());
                     
                     return { // 返回简答题对象
                         id: index + 1,                     // 问题编号
@@ -979,6 +1034,57 @@
                 this.renderSingleChoiceQuestions();
                 this.renderTrueFalseQuestions();
                 this.renderShortAnswerQuestions();
+                this.renderAnswers(); // 同时渲染答案
+            }
+            
+            // 渲染答案到答案页面
+            renderAnswers() {
+                this.renderSingleChoiceAnswers();
+                this.renderTrueFalseAnswers();
+            }
+            
+            // 渲染单选题答案
+            renderSingleChoiceAnswers() {
+                const container = document.getElementById('single-choice-answers');
+                container.innerHTML = '';
+                
+                this.questions.singleChoice.forEach(question => {
+                    const answerElement = document.createElement('div');
+                    answerElement.className = 'answer-item';
+                    answerElement.innerHTML = `
+                        <div class="answer-header">
+                            <span class="question-number">${question.id}.</span>
+                            <span class="question-text">${question.question}</span>
+                        </div>
+                        <div class="correct-answer-display">
+                            <span class="answer-label">正确答案：</span>
+                            <span class="answer-value">${question.correctAnswer}</span>
+                        </div>
+                    `;
+                    container.appendChild(answerElement);
+                });
+            }
+            
+            // 渲染判断题答案
+            renderTrueFalseAnswers() {
+                const container = document.getElementById('true-false-answers');
+                container.innerHTML = '';
+                
+                this.questions.trueFalse.forEach(question => {
+                    const answerElement = document.createElement('div');
+                    answerElement.className = 'answer-item';
+                    answerElement.innerHTML = `
+                        <div class="answer-header">
+                            <span class="question-number">${question.id}.</span>
+                            <span class="question-text">${question.question}</span>
+                        </div>
+                        <div class="correct-answer-display">
+                            <span class="answer-label">正确答案：</span>
+                            <span class="answer-value">${question.correctAnswer}</span>
+                        </div>
+                    `;
+                    container.appendChild(answerElement);
+                });
             }
             
             // 渲染单选题
@@ -1069,7 +1175,24 @@
             const generator = new QuestionGenerator();
             const generateBtn = document.querySelector('.generate-btn');
             const textInput = document.querySelector('.text-input');
+            const pageBtns = document.querySelectorAll('.page-btn');
             let debounceTimer = null;
+            
+            // 页面切换功能
+            pageBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetPage = btn.dataset.page;
+                    
+                    // 移除所有按钮的激活状态
+                    pageBtns.forEach(b => b.classList.remove('active'));
+                    // 隐藏所有页面
+                    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                    
+                    // 激活当前按钮和页面
+                    btn.classList.add('active');
+                    document.getElementById(`${targetPage}-page`).classList.add('active');
+                });
+            });
             
             // 自动生成题目函数 - 带防抖
             const autoGenerateQuestions = () => {

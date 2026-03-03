@@ -457,4 +457,146 @@ html, body {
     .option-text {
         font-size: 13px;
     }
+    
+    .page-nav {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .page-btn {
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+/* 页面切换导航样式 */
+.page-nav {
+    display: flex;
+    gap: 12px;
+    margin: 30px 0;
+    width: 100%;
+    max-width: 680px;
+    justify-content: center;
+}
+
+.page-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--apple-font);
+    color: var(--apple-gray-700);
+    background-color: var(--apple-white);
+    border: 1px solid var(--apple-gray-200);
+    border-radius: var(--apple-border-radius-small);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--apple-shadow);
+}
+
+.page-btn:hover {
+    background-color: var(--apple-gray-50);
+    border-color: var(--apple-gray-300);
+    box-shadow: var(--apple-shadow-hover);
+}
+
+.page-btn.active {
+    background-color: var(--apple-blue);
+    color: var(--apple-white);
+    border-color: var(--apple-blue);
+}
+
+/* 页面样式 */
+.page {
+    display: none;
+    width: 100%;
+}
+
+.page.active {
+    display: block;
+}
+
+/* 答案页面样式 */
+.answers-section {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 680px;
+    padding: 0;
+    box-sizing: border-box;
+    margin: 40px auto 0;
+}
+
+.answers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.answer-type-section {
+    background-color: var(--apple-white);
+    border-radius: var(--apple-border-radius);
+    padding: 20px;
+    box-shadow: var(--apple-shadow);
+    border: 1px solid var(--apple-gray-100);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.answer-type-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--apple-gray-800);
+    margin-bottom: 20px;
+    letter-spacing: -0.2px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--apple-gray-100);
+}
+
+.answers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.answer-item {
+    background-color: var(--apple-gray-50);
+    border-radius: var(--apple-border-radius-small);
+    padding: 20px;
+    border: 1px solid var(--apple-gray-100);
+    transition: var(--transition);
+}
+
+.answer-item:hover {
+    background-color: var(--apple-white);
+    box-shadow: var(--apple-shadow);
+    border-color: var(--apple-gray-200);
+}
+
+.answer-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.correct-answer-display {
+    padding: 12px;
+    background-color: rgba(0, 113, 227, 0.05);
+    border-radius: var(--apple-border-radius-small);
+    border-left: 4px solid var(--apple-blue);
+}
+
+.answer-label {
+    font-weight: 600;
+    color: var(--apple-gray-700);
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.answer-value {
+    font-weight: 700;
+    color: var(--apple-blue);
+    font-size: 16px;
 }
